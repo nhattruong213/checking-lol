@@ -1,0 +1,29 @@
+{
+  "Header": {
+    "en": "Tiếng Anh",
+    "vi": "Tiếng Việt"
+  },
+  "Nav": {
+    "overview": "Tổng quan",
+    "app": "Ứng dụng",
+    "ecommerce": "Thương mại điện tử",
+    "analytics": "Phân tích",
+    "management": "Quản lý",
+    "profile": "Hồ sơ",
+    "cards": "Thẻ",
+    "list": "Danh sách",
+    "product": "Sản phẩm",
+    "details": "Chi tiết",
+    "order": "Đơn hàng",
+    "user": "Người dùng"
+  },
+  "Settings": {
+    "settings": "Cài đặt",
+    "mode": "Chế độ",
+    "layout": "Bố cục",
+    "presets": "Mẫu cài sẵn"
+  },
+  "table": {
+    "noData": "Không có dữ liệu"
+  }
+}
