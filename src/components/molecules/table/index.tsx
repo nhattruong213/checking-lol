@@ -1,4 +1,4 @@
-import { SxProps, Table, TableBody, TableContainer, TableRow } from '@mui/material';
+import { LinearProgress, SxProps, Table, TableBody, TableContainer, TableRow } from '@mui/material';
 import { Theme } from '@mui/system';
 import { ReactNode } from 'react';
 
@@ -31,6 +31,8 @@ type Props<T> = {
   onSort?: (value: string) => void;
   onSelectRow?: (inputValue: string | number) => void;
   onSelectAllRows?: (checked: boolean, values: (string | number)[]) => void;
+  recordsTotal?: number;
+  loading?: boolean;
 };
 
 export const DataTableNNT = <T extends Row>(props: Props<T>) => {
@@ -48,6 +50,8 @@ export const DataTableNNT = <T extends Row>(props: Props<T>) => {
     orderBy = '',
     selected,
     rowsPerPageOptions,
+    recordsTotal = items.length,
+    loading = false,
     onChangePage,
     onChangeRowsPerPage,
     onSelectRow,
@@ -56,11 +60,11 @@ export const DataTableNNT = <T extends Row>(props: Props<T>) => {
   } = props;
 
   const notFound = !items.length;
-  const itemSlides = panigation ? items?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : items;
-  const isSelectedAll = itemSlides.every((item) => selected?.includes(item.id));
+  const isSelectedAll = items.every((item) => selected?.includes(item.id));
 
   return (
     <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+      {loading && <LinearProgress />}
       {selected && (
         <TableSelectActionNNT
           numSelected={selected.length}
@@ -69,7 +73,7 @@ export const DataTableNNT = <T extends Row>(props: Props<T>) => {
           onSelectAllRows={(checked) =>
             onSelectAllRows?.(
               checked,
-              itemSlides.map((row) => row.id)
+              items.map((row) => row.id)
             )
           }
           action={action}
@@ -82,7 +86,7 @@ export const DataTableNNT = <T extends Row>(props: Props<T>) => {
               onSelectAllRows: (checked) =>
                 onSelectAllRows?.(
                   checked,
-                  itemSlides.map((row) => row.id)
+                  items.map((row) => row.id)
                 ),
               rowCount: items.length,
               numSelected: selected?.length,
@@ -96,7 +100,7 @@ export const DataTableNNT = <T extends Row>(props: Props<T>) => {
           />
 
           <TableBody>
-            {itemSlides.map((item) => (
+            {items.map((item) => (
               <TableRow hover selected={selected?.includes(item.id)} key={item.id}>
                 {selected && (
                   <TableCell padding="checkbox">
@@ -122,12 +126,13 @@ export const DataTableNNT = <T extends Row>(props: Props<T>) => {
         </Table>
         {panigation && onChangePage && (
           <TablePanigationNNT
-            count={items.length}
+            count={recordsTotal}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
             rowsPerPageOptions={rowsPerPageOptions}
+            labelRowsPerPage="Số hàng"
           />
         )}
       </SimpleBarScroll>

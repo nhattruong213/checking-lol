@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 
 import { UseTableProps } from '../type';
-import { getComparator } from '../utils';
 
 export const useTableNNT = (props?: UseTableProps) => {
   const { defaultOrder = 'asc', defaultOrderBy = 'name', defaultSelected = [], defaultRowsPerPage = 10, defaultCurrentPage = 0 } = props || {};
@@ -11,7 +10,6 @@ export const useTableNNT = (props?: UseTableProps) => {
   const [selected, setSelected] = useState<(string | number)[]>(defaultSelected);
   const [orderBy, setOrderBy] = useState<string>(defaultOrderBy);
   const [order, setOrder] = useState<'asc' | 'desc'>(defaultOrder);
-  const [result, setResult] = useState(0);
 
   const onChangePage = useCallback((event: unknown, newPage: number) => {
     setPage(newPage);
@@ -52,31 +50,12 @@ export const useTableNNT = (props?: UseTableProps) => {
     setPage(0);
   }, []);
 
-  const applyOrderby = useCallback(
-    <T>(inputData: T[]) => {
-      const comparator: (a: any, b: any) => number = getComparator(order, orderBy);
-      const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-
-      stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-
-        return a[1] - b[1];
-      });
-
-      return stabilizedThis.map((el) => el[0]);
-    },
-    [order, orderBy]
-  );
-
   return {
     page,
     rowsPerPage,
     selected,
     orderBy,
     order,
-    result,
-    setResult,
     setPage,
     onChangePage,
     onChangeRowsPerPage,
@@ -84,6 +63,5 @@ export const useTableNNT = (props?: UseTableProps) => {
     onSelectAllRows,
     onSort,
     onResetPage,
-    applyOrderby,
   };
 };

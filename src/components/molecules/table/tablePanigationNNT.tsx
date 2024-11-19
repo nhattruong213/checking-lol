@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const TablePanigationNNT = (props: Props & TablePaginationProps) => {
-  const { sx, rowsPerPageOptions = [5, 10], ...other } = props;
+  const { sx, rowsPerPageOptions = [5, 10, 25], ...other } = props;
 
   return (
     <Box sx={{ position: 'relative', ...sx }}>

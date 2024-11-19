@@ -16,6 +16,6 @@ export const navConfig = [
   {
     title: 'Báo lỗi',
     icon: <Iconify icon="solar:notebook-bold-duotone" />,
-    path: '/loi',
+    path: 'https://www.facebook.com/diem.xuavanay.5/',
   },
 ];

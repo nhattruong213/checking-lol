@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { alpha, Box, Typography } from '@mui/material';
 
 export const WinRate = ({ player }: { player: { wins: number; losses: number } }) => {
   const getWinrate = (wins: number, losses: number): number => {
@@ -26,20 +26,21 @@ export const WinRate = ({ player }: { player: { wins: number; losses: number } }
           <Typography
             variant="body2"
             sx={{
+              fontSize: '12px',
               position: 'absolute',
               left: '50%',
               top: '50%',
               transform: 'translate(-50%, -50%)',
             }}
           >
-            {player.wins}
+            {`${player.wins}W`}
           </Typography>
         </Box>
 
         <Box
           sx={{
             flexGrow: loseRate,
-            backgroundColor: '#FF3030',
+            backgroundColor: alpha('rgb(188, 64, 79)', 1),
             height: 20,
             position: 'relative',
             borderTopRightRadius: 10,
@@ -49,13 +50,14 @@ export const WinRate = ({ player }: { player: { wins: number; losses: number } }
           <Typography
             variant="body2"
             sx={{
+              fontSize: '12px',
               position: 'absolute',
               left: '50%',
               top: '50%',
               transform: 'translate(-50%, -50%)',
             }}
           >
-            {player.losses}
+            {`${player.losses}L`}
           </Typography>
         </Box>
       </Box>

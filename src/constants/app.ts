@@ -15,7 +15,7 @@ export const PAGINATION_DEFAULT = {
 };
 export const BASE_API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8089';
 
-export const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? 'RGAPI-b69dca99-8ab4-4fd7-a008-c3ce5561acde';
+export const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? 'RGAPI-76914abf-12cc-44bf-b890-6cc179ef241c';
 export const HOST_API = process.env.NEXT_PUBLIC_HOST_API ?? 'http://localhost:3000';
 
 export const REAL_PATH = process.env.NEXT_PUBLIC_NOVA_RESERVE_URL;

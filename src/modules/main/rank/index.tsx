@@ -1,9 +1,9 @@
 'use client';
 
-import { alpha, Box, Container, LinearProgress, Link as LinkMui, Stack, Typography } from '@mui/material';
+import { alpha, Box, Container, Link as LinkMui, Stack, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { MotionViewport } from '@/components/atoms/animate/motion-viewport';
 import { varFade } from '@/components/atoms/animate/variants';
@@ -23,11 +23,9 @@ import { WinRate } from './components/WinRate';
 export const Rank = () => {
   const { version, champions } = useAppSelector((state) => state.common);
 
-  const STATUS_OPTIONS = [
-    { value: 'solo', label: 'Ranked Solo' },
-    { value: 'flex', label: 'Ranked Flex' },
-    { value: 'level', label: 'Level' },
-    { value: 'master', label: 'Mastery' },
+  const FILTER_OPTION = [
+    { value: 'RANKED_SOLO_5x5', label: 'Ranked Solo' },
+    { value: 'RANKED_FLEX_SR', label: 'Ranked Flex' },
   ];
 
   const columns: TableColumnsType<any>[] = [
@@ -74,7 +72,7 @@ export const Rank = () => {
     { id: 'summonerLevel', label: 'CẤP ĐỘ' },
     {
       id: 'mastery',
-      label: 'TƯỚNG CHƠI NHIỀU NHẤT',
+      label: 'TƯỚNG THÔNG THẠO',
       render: ({ row }) => {
         return (
           <Box display="flex" alignItems="center">
@@ -101,65 +99,84 @@ export const Rank = () => {
     },
   ];
 
-  const { page, rowsPerPage, onChangePage, onChangeRowsPerPage } = useTableNNT();
+  const { page, rowsPerPage, setPage, onChangePage, onChangeRowsPerPage } = useTableNNT();
   const [data, setData] = useState<any[]>([]);
+  const [queue, setQueue] = useState('RANKED_SOLO_5x5');
 
+  const [recordsTotal, setRecordsTotal] = useState(0);
   const { isLoading } = useQuery({
     apiConfig: getTopPlayers,
     payload: {
       page: page,
       perpage: rowsPerPage,
+      queue: queue,
     },
     options: {
-      queryKey: [page, rowsPerPage],
+      queryKey: [page, rowsPerPage, queue],
     },
     onSuccess: ({ data }) => {
       setData(data.data);
+      setRecordsTotal(data.recordsTotal);
     },
   });
 
+  const handleFilter = useCallback(
+    (event: React.SyntheticEvent, newValue: string) => {
+      setQueue(newValue);
+      setPage(0);
+    },
+    [setQueue]
+  );
+
   return (
     <MainLayout>
-      <Container
-        component={MotionViewport}
+      <Box
         sx={{
-          py: { xs: 4, md: 4.5 },
+          overflow: 'hidden',
+          position: 'relative',
+          bgcolor: 'background.default',
         }}
       >
-        <Stack
-          spacing={3}
+        <Container
+          component={MotionViewport}
           sx={{
-            textAlign: 'center',
-            mb: { xs: 2, md: 2 },
+            py: { xs: 4, md: 4.5 },
           }}
         >
-          <m.div variants={varFade().inDown}>
-            <Typography variant="h4">{'Top rank Thách Đấu server Vietnam Liên Minh Huyền Thoại cập nhật mới nhất'}</Typography>
-          </m.div>
-        </Stack>
-
-        <Card>
-          <Tabs
-            variant="scrollable"
-            scrollButtons="auto"
-            allowScrollButtonsMobile={true}
+          <Stack
+            spacing={3}
             sx={{
-              px: 2.5,
-              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              textAlign: 'center',
+              mb: { xs: 2, md: 2 },
             }}
           >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab key={tab.value} iconPosition="end" value={tab.value} label={tab.label} />
-            ))}
-          </Tabs>
-        </Card>
+            <m.div variants={varFade().in}>
+              <Typography variant="h4">{'Top rank Thách Đấu server Vietnam Liên Minh Huyền Thoại cập nhật mới nhất'}</Typography>
+            </m.div>
+          </Stack>
 
-        <Card sx={{ mt: 2 }}>
-          {isLoading ? (
-            <LinearProgress />
-          ) : (
+          <Card sx={{ borderRadius: 0 }}>
+            <Tabs
+              variant="scrollable"
+              value={queue}
+              scrollButtons="auto"
+              allowScrollButtonsMobile={true}
+              onChange={handleFilter}
+              sx={{
+                px: 2.5,
+                boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              }}
+            >
+              {FILTER_OPTION.map((tab) => (
+                <Tab key={tab.value} value={tab.value} label={tab.label} />
+              ))}
+            </Tabs>
+          </Card>
+
+          <Card sx={{ mt: 2, borderRadius: 0 }}>
             <DataTableNNT
-              rowsPerPageOptions={[5, 10, 25]}
+              loading={isLoading}
+              rowsPerPageOptions={[5, 10]}
               panigation={true}
               columns={columns}
               items={data}
@@ -167,10 +184,11 @@ export const Rank = () => {
               rowsPerPage={rowsPerPage}
               onChangePage={onChangePage}
               onChangeRowsPerPage={onChangeRowsPerPage}
+              recordsTotal={recordsTotal}
             />
-          )}
-        </Card>
-      </Container>
+          </Card>
+        </Container>
+      </Box>
     </MainLayout>
   );
 };

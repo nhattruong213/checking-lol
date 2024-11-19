@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
     }).then((response) => response.json());
 
     const topPlayers = topPlayersFetch.entries;
+    const total = topPlayers.length;
     const startIndex = page * perPage;
     const endIndex = page * perPage + perPage;
 
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
       })
     );
 
-    return Response.json({ data: enrichedData });
+    return Response.json({ data: enrichedData, recordsTotal: total });
   } catch (error) {
     return Response.json({ error: 'Failed to fetch data' }, { status: 500 });
   }
