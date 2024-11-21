@@ -5,12 +5,14 @@ import { Box, Stack, styled } from '@mui/system';
 
 import { MotionViewport } from '@/components/atoms/animate/motion-viewport';
 import { AvatarCustom } from '@/components/atoms/avatar';
-import { Card } from '@/components/atoms/card';
 import { LoadingScreen } from '@/components/molecules/loading';
 import { MainLayout } from '@/components/organisms/main';
 import { bgGradient } from '@/styles/theme/css';
 
+import { History } from './components/History';
+import { RankPoint } from './components/RankPoint';
 import { useLogic } from './hooks/useLogic';
+import { TRankPoint } from './type';
 
 const StyledRoot = styled('div')(({ theme }) => ({
   ...bgGradient({
@@ -21,7 +23,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
 }));
 
 export const Profile = () => {
-  const { data, version, isLoading } = useLogic();
+  const { data, version, isLoading, rankPoints } = useLogic();
 
   return (
     <MainLayout>
@@ -52,17 +54,20 @@ export const Profile = () => {
                       {data?.tagLine}
                     </Typography>
                   </Box>
-                  <Typography variant="body1">{`Level ${data?.summonerLevel}`}</Typography>
+                  <Typography variant="subtitle1">{`Level ${data?.summonerLevel}`}</Typography>
                 </Box>
               </Box>
             </StyledRoot>
           </Stack>
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
-              <Card sx={{ p: 1.2, height: 100 }}></Card>
+              <Stack marginBottom={1}>
+                <RankPoint title="Rank đơn" rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_SOLO_5x5')} />
+              </Stack>
+              <RankPoint title="Rank flex" rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_FLEX_SR')} />
             </Grid>
             <Grid item xs={12} md={8}>
-              <Card sx={{ p: 1.2, height: 400 }}></Card>
+              <History puuid={data?.puuid} />
             </Grid>
           </Grid>
         </Container>

@@ -69,8 +69,8 @@ const getSizeStyle = (size?: string) => {
     case 'lg':
       return {
         fontSize: '1.2rem',
-        width: 52,
-        height: 52,
+        width: 58,
+        height: 58,
       };
 
     case 'xl':
