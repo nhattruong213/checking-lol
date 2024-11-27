@@ -8,12 +8,14 @@ export async function GET(request: NextRequest) {
   const start = searchParams.get('start') ?? 0;
   const count = searchParams.get('count') ?? 10;
   const puuid = searchParams.get('puuid');
-  const cacheKey = `${puuid}-${start}-${count}`;
+  const queueId = searchParams.get('queueId') ?? 'all';
+  const cacheKey = `${puuid}-${start}-${count}-${queueId}`;
+  const queryQueue = queueId != 'all' ? `queue=${queueId}&` : '';
   try {
     const matches = await fetch(
-      `https://sea.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?&start=${start}&count=${count}&api_key=${API_KEY}`,
+      `https://sea.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?${queryQueue}start=${start}&count=${count}&api_key=${API_KEY}`,
       {
-        next: { revalidate: 3600, tags: [cacheKey] },
+        next: { revalidate: 900, tags: [cacheKey] },
       }
     ).then((response) => response.json());
 
@@ -21,7 +23,7 @@ export async function GET(request: NextRequest) {
       matches.map(
         async (match: string) =>
           await fetch(`https://sea.api.riotgames.com/lol/match/v5/matches/${match}?api_key=${API_KEY}`, {
-            next: { revalidate: 3600, tags: [match] },
+            next: { revalidate: 900, tags: [match] },
           }).then((response) => response.json())
       )
     );

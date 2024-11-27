@@ -1,23 +1,53 @@
-import { Box, Link as LinkMui, Stack, Typography } from '@mui/material';
+import { alpha, Box, Link as LinkMui, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
+import { useCallback, useState } from 'react';
 
 import { AvatarCustom } from '@/components/atoms/avatar';
 import { Card } from '@/components/atoms/card';
-import { runes, summonerSpell } from '@/constants/app';
+import { Label } from '@/components/atoms/label';
+import { Tab, Tabs } from '@/components/atoms/tabs';
+import { ACHIVEMENTS, QUEUE_OPTIONS, runes, summonerSpell } from '@/constants/app';
+import { useResponsive } from '@/hooks/useResponsive';
 import { useAppSelector } from '@/stores/hooks';
 import { bgGradient } from '@/styles/theme/css';
 import { moment } from '@/utils/moment';
 
 import { useMatch } from '../hooks/useMatch';
 import { convertToMinutes, getGameMode, getKDA } from '../utils';
-import { Label } from '@/components/atoms/label';
 
 export const History = ({ puuid }: { puuid?: string }) => {
-  const { matches } = useMatch(puuid);
+  const [queueId, setQueueId] = useState<string | number>('all');
+  const { matches } = useMatch(puuid, queueId);
   const { version } = useAppSelector((state) => state.common);
+  const mdDown = useResponsive('down', 'lg');
+  const mdUp = useResponsive('up', 'md');
+  const smUp = useResponsive('up', 'sm');
+
+  const handleChangeQueue = useCallback(
+    (event: React.SyntheticEvent, newValue: string | number) => {
+      setQueueId(newValue);
+    },
+    [setQueueId]
+  );
 
   return (
-    <Card sx={{ p: 1, borderRadius: 0 }}>
+    <Card sx={{ p: 1, borderRadius: 0, pt: 0.3 }}>
+      <Tabs
+        variant="scrollable"
+        scrollButtons="auto"
+        allowScrollButtonsMobile={true}
+        value={queueId}
+        onChange={handleChangeQueue}
+        sx={{
+          px: 2.5,
+          boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+        }}
+      >
+        {QUEUE_OPTIONS.map((queue) => (
+          <Tab key={queue.queueId} value={queue.queueId} label={queue.description} />
+        ))}
+      </Tabs>
+      <Stack sx={{ borderBottom: '1', mb: 2 }} />
       {matches?.map((match: any, key: string) => {
         const { info } = match;
         const { participants } = info;
@@ -55,10 +85,10 @@ export const History = ({ puuid }: { puuid?: string }) => {
                   {convertToMinutes(info.gameDuration)}
                 </Typography>
               </Box>
-              <LinkMui>{'Chi tiết trận đấu'}</LinkMui>
+              {smUp && <LinkMui>{'Chi tiết trận đấu'}</LinkMui>}
             </Box>
-            <Box gap={5} display="flex" sx={{ width: 1 }}>
-              <Box sx={{ width: '60%', gap: 2 }}>
+            <Box sx={{ display: 'flex', width: 1, flexDirection: mdDown ? 'column' : 'row', gap: mdDown ? 1.5 : 5 }}>
+              <Box sx={{ width: mdDown ? '100%' : '60%', gap: 2 }}>
                 <Box display="flex">
                   <Box display="flex" alignContent="center">
                     <AvatarCustom size="lg" src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${summoner.championName}.png`} />
@@ -79,7 +109,7 @@ export const History = ({ puuid }: { puuid?: string }) => {
                           />
                         </Stack>
                       </Box>
-                      <Box display="flex">
+                      <Box width={55} display="flex">
                         <Image
                           alt={`runnes ${runes[summoner.perks.styles[0].selections[0].perk]}`}
                           width={25}
@@ -124,56 +154,75 @@ export const History = ({ puuid }: { puuid?: string }) => {
                     </Typography>
                   </Box>
                 </Box>
-                <Box display="flex" gap={1}>
-                  <Label sx={{ background: summoner.win ? 'rgba(46, 192, 255, 0.2)' : 'rgba(255, 34, 73, .2)' }}>{'2 DoubleKill'}</Label>
-                  <Label sx={{ background: summoner.win ? 'rgba(46, 192, 255, 0.2)' : 'rgba(255, 34, 73, .2)' }}>{'PentaKill'}</Label>
+                <Box mt={1} display="flex" gap={1}>
+                  {ACHIVEMENTS.map((achievement) => {
+                    if (summoner[achievement.id] > 0 || summoner[achievement.id])
+                      return (
+                        <Label key={achievement.id} sx={{ background: summoner.win ? 'rgba(46, 192, 255, 0.2)' : 'rgba(255, 34, 73, 0.2)' }}>
+                          {`${summoner[achievement.id]} ${achievement.name}`}
+                        </Label>
+                      );
+                  })}
                 </Box>
               </Box>
-              <Box sx={{ width: '30%' }}>
-                <Box display="flex" gap={1}>
-                  <Box display="flex" flexDirection="column" gap={0.5}>
-                    {victoryTeam.map((player: any, index: string) => (
-                      <Box key={index} display="flex" alignItems="center">
-                        <AvatarCustom size="xs" src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${player.championName}.png`} />
-                        <LinkMui
-                          sx={{
-                            fontSize: 12,
-                            ml: 0.5,
-                            textDecoration: 'unset',
-                            maxWidth: 90,
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis',
-                          }}
-                        >
-                          {player.riotIdGameName}
-                        </LinkMui>
-                      </Box>
-                    ))}
-                  </Box>
-                  <Box display="flex" flexDirection="column" gap={0.5}>
-                    {defeatedTeam.map((player: any, index: string) => (
-                      <Box key={index} display="flex" alignItems="center">
-                        <AvatarCustom size="xs" src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${player.championName}.png`} />
-                        <LinkMui
-                          sx={{
-                            fontSize: 12,
-                            ml: 0.5,
-                            textDecoration: 'unset',
-                            maxWidth: 90,
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis',
-                          }}
-                        >
-                          {player.riotIdGameName}
-                        </LinkMui>
-                      </Box>
-                    ))}
+              {mdUp && (
+                <Box sx={{ width: mdDown ? '100%' : '30%' }}>
+                  <Box sx={{ display: 'flex', flexDirection: mdDown ? 'column' : 'row', gap: 1 }}>
+                    <Box sx={{ display: 'flex', flexDirection: mdDown ? 'row' : 'column', gap: 1 }}>
+                      {victoryTeam.map((player: any, index: string) => (
+                        <Box key={index} display="flex" alignItems="center">
+                          <AvatarCustom
+                            size="xs"
+                            src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${player.championName}.png`}
+                          />
+                          <LinkMui
+                            sx={{
+                              fontSize: 12,
+                              ml: 0.5,
+                              textDecoration: 'unset',
+                              maxWidth: 90,
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {player.riotIdGameName}
+                          </LinkMui>
+                        </Box>
+                      ))}
+                    </Box>
+                    <Box sx={{ display: 'flex', flexDirection: mdDown ? 'row' : 'column', gap: 1 }}>
+                      {defeatedTeam.map((player: any, index: string) => (
+                        <Box key={index} display="flex" alignItems="center">
+                          <AvatarCustom
+                            size="xs"
+                            src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${player.championName}.png`}
+                          />
+                          <LinkMui
+                            sx={{
+                              fontSize: 12,
+                              ml: 0.5,
+                              textDecoration: 'unset',
+                              maxWidth: 90,
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {player.riotIdGameName}
+                          </LinkMui>
+                        </Box>
+                      ))}
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
+              )}
             </Box>
+            {!smUp && (
+              <Box mt={2}>
+                <LinkMui>{'Chi tiết trận đấu'}</LinkMui>
+              </Box>
+            )}
           </Card>
         );
       })}

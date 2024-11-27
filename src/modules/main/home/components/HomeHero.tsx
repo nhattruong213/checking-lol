@@ -6,6 +6,7 @@ import { alpha, styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { m, useScroll } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -160,21 +161,22 @@ export const HomeHero = () => {
 
   const methods = useForm({});
 
-  const { handleSubmit } = methods;
+  const { handleSubmit, watch } = methods;
+  const router = useRouter();
 
-  const handleOnSubmit = handleSubmit(() => {});
-
+  const searchValue = watch('search');
   const [showHash, setShowHash] = useState(true);
-  const [value, setValue] = useState('');
   const textWidthRef = useRef<HTMLDivElement>(null);
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setValue(value);
-    setShowHash(!value.includes('#'));
-  };
-
   const textWidth = textWidthRef.current?.offsetWidth || 0;
+
+  useEffect(() => {
+    setShowHash(!searchValue?.includes('#'));
+  }, [searchValue]);
+
+  const handleOnSubmit = handleSubmit((data) => {
+    const encodedGameName = encodeURIComponent(data.search);
+    router.push(`/profile/${encodedGameName}`);
+  });
 
   const renderDescription = (
     <Stack
@@ -214,7 +216,7 @@ export const HomeHero = () => {
                   </InputAdornment>
                 ),
               }}
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               placeholder="Name player, i.e. player#VN1"
               name="search"
               variant="outlined"
@@ -222,11 +224,9 @@ export const HomeHero = () => {
               margin="normal"
             />
             <Box ref={textWidthRef} sx={{ position: 'absolute', visibility: 'hidden', whiteSpace: 'pre', fontSize: '16px', fontFamily: 'inherit' }}>
-              {value}
+              {searchValue}
             </Box>
-            {showHash && value && (
-              <Box sx={{ position: 'absolute', top: '2rem', left: `${textWidth + 23}px`, color: alpha('#e5e7eb', 0.5) }}>{'#'}</Box>
-            )}
+            {showHash && searchValue && <Box sx={{ position: 'absolute', top: '2rem', left: `${textWidth + 23}px` }}>{'#'}</Box>}
             <Button type="submit" variant="contained" color="primary">
               {'Tìm kiếm'}
             </Button>

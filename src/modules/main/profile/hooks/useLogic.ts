@@ -3,18 +3,16 @@ import { getRanksPoint } from '@/services/api/get-rank-points';
 import { getSummoner } from '@/services/api/get-summoner';
 import { useAppSelector } from '@/stores/hooks';
 
-export const useLogic = () => {
-  const tagLine = '8888';
-  const gameName = 'Thầy Hùng Bry';
-  // const tagLine = '1910';
-  // const gameName = 'Thánh Chỉ Tới';
+export const useLogic = (gameName: string) => {
+  const [name, tagLine] = gameName.split('#').map((part) => part.trim());
+
   const { champions, version } = useAppSelector((state) => state.common);
 
   const { data, isLoading } = useQuery({
     apiConfig: getSummoner,
     payload: {
       tagLine,
-      gameName,
+      gameName: name,
     },
     options: {
       queryKey: [tagLine, gameName],

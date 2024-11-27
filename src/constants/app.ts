@@ -13,10 +13,8 @@ export const PAGINATION_DEFAULT = {
   limit: PAGINATION_LIMIT.S,
   page: 1,
 };
-export const BASE_API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8089';
-
-export const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? 'RGAPI-22831015-3272-4412-a3a0-5ba375e8f778';
-export const HOST_API = process.env.NEXT_PUBLIC_HOST_API ?? 'http://localhost:3000';
+export const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? 'RGAPI-164291f6-337e-4598-8360-3244b9119672';
+export const HOST_API = process.env.NEXT_PUBLIC_HOST_API ?? '/';
 
 export const REAL_PATH = process.env.NEXT_PUBLIC_NOVA_RESERVE_URL;
 
@@ -323,7 +321,7 @@ export const QUEUE_TYPE = [
   {
     queueId: 440,
     map: "Summoner's Rift",
-    description: 'Ranked Flex ',
+    description: 'Ranked Flex',
     notes: null,
   },
   {
@@ -725,3 +723,65 @@ export const runes: {
   '9111': 'perk-images/Styles/Precision/Triumph.png',
   '9923': 'perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png',
 };
+
+export const ACHIVEMENTS = [
+  {
+    id: 'firstBloodKill',
+    name: 'First Blood',
+  },
+  {
+    id: 'pentaKills',
+    name: 'Penta Kills',
+  },
+  {
+    id: 'quadraKills',
+    name: 'Quadra Kills',
+  },
+  {
+    id: 'tripleKills',
+    name: 'Triple Kills',
+  },
+  {
+    id: 'doubleKills',
+    name: 'Double Kills',
+  },
+];
+
+export const QUEUE_OPTIONS = [
+  {
+    queueId: 'all',
+    map: "Summoner's Rift",
+    description: 'Tất Cả Hàng Chờ',
+    notes: null,
+  },
+  {
+    queueId: 420,
+    map: "Summoner's Rift",
+    description: 'Đơn/Đôi',
+    notes: null,
+  },
+  {
+    queueId: 440,
+    map: "Summoner's Rift",
+    description: 'Linh Hoạt',
+    notes: null,
+  },
+  {
+    queueId: 430,
+    map: "Summoner's Rift",
+    description: 'Đánh Thường',
+    notes: null,
+  },
+  {
+    queueId: 450,
+    map: 'Howling Abyss',
+    description: 'ARAM ',
+    notes: null,
+  },
+  {
+    queueId: 76,
+    map: "Summoner's Rift",
+    description: 'URF',
+    notes: null,
+  },
+];

@@ -22,8 +22,8 @@ const StyledRoot = styled('div')(({ theme }) => ({
   width: '100%',
 }));
 
-export const Profile = () => {
-  const { data, version, isLoading, rankPoints } = useLogic();
+export const Profile = ({ gameName }: { gameName: string }) => {
+  const { data, version, isLoading, rankPoints } = useLogic(gameName);
 
   return (
     <MainLayout>
