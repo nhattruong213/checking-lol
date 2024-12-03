@@ -1,5 +1,6 @@
 'use client';
 
+import { Box, Typography } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
@@ -53,8 +54,12 @@ export const NavMobile = ({ offsetTop, data }: NavProps) => {
         }}
       >
         <SimpleBarScroll>
-          <Logo sx={{ mx: 2.5, my: 3 }} />
-
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Logo sx={{ ml: 2.5, my: 3 }} />
+            <Typography variant="h3" sx={(theme) => ({ color: theme.palette.primary.main })}>
+              {'FF'}
+            </Typography>
+          </Box>
           <List component="nav" disablePadding>
             {data.map((link) => (
               <NavList key={link.title} item={link} />
