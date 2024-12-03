@@ -15,7 +15,7 @@ export const SettingsButton = () => {
         height: 45,
       }}
     >
-      <Iconify icon="solar:settings-bold-duotone" width={24} />
+      <Iconify icon="tabler:settings-cog" width={24} />
     </IconButton>
   );
 };
