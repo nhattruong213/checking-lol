@@ -20,9 +20,8 @@ export async function GET(request: NextRequest) {
     const endIndex = page * perPage + perPage;
 
     const paginatedPlayers = topPlayers.slice(startIndex, endIndex);
-    let stt = startIndex;
     const enrichedData = await Promise.all(
-      paginatedPlayers.map(async (player: any) => {
+      paginatedPlayers.map(async (player: any, index: number) => {
         const puidFetch = await fetch(`https://vn2.api.riotgames.com/lol/summoner/v4/summoners/${player.summonerId}?api_key=${API_KEY}`, {
           next: { revalidate: 3600, tags: [player.summonerId] },
         }).then((res) => res.json());
@@ -36,12 +35,20 @@ export async function GET(request: NextRequest) {
             next: { revalidate: 3600, tags: [puuid] },
           }).then((res) => res.json()),
         ]);
-        stt++;
         const favoriteChampion = championMasteries.slice(0, 3).map((champion: any) => ({
           championId: champion.championId,
         }));
 
-        return { ...player, puuid, id: stt, profileIconId, summonerLevel, gameName: gameName.gameName, tagLine: gameName.tagLine, favoriteChampion };
+        return {
+          ...player,
+          puuid,
+          id: startIndex + index + 1,
+          profileIconId,
+          summonerLevel,
+          gameName: gameName.gameName,
+          tagLine: gameName.tagLine,
+          favoriteChampion,
+        };
       })
     );
 
