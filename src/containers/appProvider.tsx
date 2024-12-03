@@ -24,7 +24,7 @@ export function AppProvider({ children }: React.PropsWithChildren) {
       defaultSettings={{
         themeMode: 'light', // 'light' | 'dark'
         themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini',
-        themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+        themeColorPresets: 'purple', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
       }}
     >
       <AppRouterCacheProvider>

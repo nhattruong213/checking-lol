@@ -8,7 +8,7 @@ type LogoSectionProps = {
 };
 
 export const Logo: React.FC<LogoSectionProps> = ({ sx }) => {
-  const logo = <SvgColor src="/assets/icons/logo/lol.svg" sx={{ width: 40, height: 40, cursor: 'pointer', ...sx }} />;
+  const logo = <SvgColor src="/assets/icons/logo/ff.svg" sx={{ width: 40, height: 40, cursor: 'pointer', ...sx }} />;
 
   return (
     <LinkMui component={Link} href="/" sx={{ display: 'contents' }}>
