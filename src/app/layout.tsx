@@ -10,7 +10,7 @@ import { AppProvider } from '@/containers/appProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'LOL-Check',
+  title: 'FF',
 };
 
 export default async function RootLayout({

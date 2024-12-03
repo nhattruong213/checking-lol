@@ -1,4 +1,4 @@
-import { Toolbar, Typography, useTheme } from '@mui/material';
+import { Toolbar, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
@@ -53,9 +53,7 @@ export const Header = () => {
       >
         <Container sx={{ height: 1, display: 'flex', alignItems: 'center' }}>
           <Logo />
-          <Typography variant="h3" sx={{ color: theme.palette.primary.main }}>
-            {'FF'}
-          </Typography>
+
           <Box sx={{ flexGrow: 1 }} />
 
           {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
