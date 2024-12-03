@@ -26,7 +26,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
     imgUrl: '/assets/background/overlay_3.jpg',
   }),
   width: '100%',
-  height: '70vh',
+  height: '100vh',
   position: 'relative',
   [theme.breakpoints.up('md')]: {
     top: 0,
