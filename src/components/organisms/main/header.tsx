@@ -52,7 +52,7 @@ export const Header = () => {
         }}
       >
         <Container sx={{ height: 1, display: 'flex', alignItems: 'center' }}>
-          <Logo />
+          <Logo sx={{ ml: 2 }} />
 
           <Box sx={{ flexGrow: 1 }} />
 

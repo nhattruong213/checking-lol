@@ -13,7 +13,7 @@ export const NavItem = ({ item, open, active, externalLink, ...other }: NavItemM
 
   const renderContent = (
     <ListItem active={active} {...other}>
-      <ListItemIcon> {icon} </ListItemIcon>
+      <ListItemIcon sx={{ minWidth: 30, color: 'inherit' }}> {icon} </ListItemIcon>
 
       <ListItemText disableTypography primary={title} />
 
