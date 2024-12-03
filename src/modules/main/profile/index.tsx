@@ -7,6 +7,7 @@ import { MotionViewport } from '@/components/atoms/animate/motion-viewport';
 import { AvatarCustom } from '@/components/atoms/avatar';
 import { LoadingScreen } from '@/components/molecules/loading';
 import { MainLayout } from '@/components/organisms/main';
+import { useResponsive } from '@/hooks/useResponsive';
 import { bgGradient } from '@/styles/theme/css';
 
 import { History } from './components/History';
@@ -24,6 +25,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
 
 export const Profile = ({ gameName }: { gameName: string }) => {
   const { data, version, isLoading, rankPoints } = useLogic(gameName);
+  const mdDown = useResponsive('down', 'md');
 
   return (
     <MainLayout>
@@ -40,19 +42,21 @@ export const Profile = ({ gameName }: { gameName: string }) => {
             <StyledRoot>
               <Box sx={{ mt: 4, mb: 3.5, pl: 3 }} display="flex" alignItems="center">
                 <AvatarCustom
-                  size="xxl"
+                  size={mdDown ? 'xl' : 'xxl'}
                   type="outlined"
                   src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${data?.profileIconId}.png`}
                 />
                 <Box sx={{ ml: 1.5 }}>
-                  <Box display="flex" alignItems="end">
+                  <Box sx={{ display: 'flex', alignItems: 'end' }}>
                     <Typography sx={{ lineHeight: 1.2 }} variant="h3">
                       {data?.gameName}
                     </Typography>
-                    <Typography variant="h5">
-                      {'#'}
-                      {data?.tagLine}
-                    </Typography>
+                    {!mdDown && (
+                      <Typography variant="h5">
+                        {'#'}
+                        {data?.tagLine}
+                      </Typography>
+                    )}
                   </Box>
                   <Typography variant="subtitle1">{`Level ${data?.summonerLevel}`}</Typography>
                 </Box>
