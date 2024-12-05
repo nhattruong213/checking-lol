@@ -68,13 +68,13 @@ export const Profile = ({ gameName }: { gameName: string }) => {
               <Stack marginBottom={1}>
                 <RankPoint
                   loading={isLoadingRankPoints}
-                  title="Rank đơn"
+                  title="RANK ĐƠN"
                   rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_SOLO_5x5')}
                 />
               </Stack>
               <RankPoint
                 loading={isLoadingRankPoints}
-                title="Rank flex"
+                title="RANK LINH HOẠT"
                 rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_FLEX_SR')}
               />
             </Grid>

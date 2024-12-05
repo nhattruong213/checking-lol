@@ -19,13 +19,14 @@ import { useQuery } from '@/hooks/useQuery';
 import { getTopPlayers } from '@/services/api/get-top-player';
 import { useAppSelector } from '@/stores/hooks';
 
+import { SkeletonTable } from './components/SkeletonTable';
 import { WinRate } from './components/WinRate';
 export const Rank = () => {
   const { version, champions } = useAppSelector((state) => state.common);
 
   const FILTER_OPTION = [
-    { value: 'RANKED_SOLO_5x5', label: 'Ranked Solo' },
-    { value: 'RANKED_FLEX_SR', label: 'Ranked Flex' },
+    { value: 'RANKED_SOLO_5x5', label: 'Rank Đơn/Đôi' },
+    { value: 'RANKED_FLEX_SR', label: 'Rank Linh Hoạt' },
   ];
 
   const columns: TableColumnsType<any>[] = [
@@ -38,7 +39,7 @@ export const Rank = () => {
       label: 'NGƯỜI CHƠI',
       render: ({ row }) => {
         return (
-          <LinkMui sx={{ textDecoration: 'unset' }} component={Link} href={'/'}>
+          <LinkMui sx={{ textDecoration: 'unset' }} component={Link} href={`/profile/${encodeURIComponent(`${row.gameName}#${row.tagLine}`)}`}>
             <Box display="flex" alignItems="center">
               <AvatarCustom type="filled" src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${row.profileIconId}.png`} />
               <Typography sx={{ ml: 2 }}>
@@ -155,7 +156,7 @@ export const Rank = () => {
             </m.div>
           </Stack>
 
-          <Card sx={{ borderRadius: 0 }}>
+          <Card>
             <Tabs
               variant="scrollable"
               value={queue}
@@ -171,21 +172,21 @@ export const Rank = () => {
                 <Tab key={tab.value} value={tab.value} label={tab.label} />
               ))}
             </Tabs>
-          </Card>
-
-          <Card sx={{ mt: 2, borderRadius: 0 }}>
-            <DataTableNNT
-              loading={isLoading}
-              rowsPerPageOptions={[5, 10]}
-              panigation={true}
-              columns={columns}
-              items={data}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onChangePage={onChangePage}
-              onChangeRowsPerPage={onChangeRowsPerPage}
-              recordsTotal={recordsTotal}
-            />
+            {isLoading ? (
+              <SkeletonTable />
+            ) : (
+              <DataTableNNT
+                rowsPerPageOptions={[5, 10]}
+                panigation={true}
+                columns={columns}
+                items={data}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                onChangePage={onChangePage}
+                onChangeRowsPerPage={onChangeRowsPerPage}
+                recordsTotal={recordsTotal}
+              />
+            )}
           </Card>
         </Container>
       </Box>

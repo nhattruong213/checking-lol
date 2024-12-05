@@ -1,10 +1,11 @@
-import { Toolbar, useTheme } from '@mui/material';
+import { IconButton, Toolbar, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 
 import { AppBar } from '@/components/atoms/appBar';
 import { HeaderShadow } from '@/components/atoms/headerShadow';
+import { Iconify } from '@/components/atoms/iconify';
 import { LoginButton } from '@/components/atoms/loginButton';
 import { Logo } from '@/components/atoms/logo';
 import { SettingsButton } from '@/components/molecules/settingButton';
@@ -59,7 +60,19 @@ export const Header = () => {
           {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
 
           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
-            {mdUp && <LoginButton />}
+            {mdUp ? (
+              <LoginButton />
+            ) : (
+              <IconButton
+                aria-label="settings"
+                sx={{
+                  width: 45,
+                  height: 45,
+                }}
+              >
+                <Iconify icon="simple-icons:riotgames" width={20} />
+              </IconButton>
+            )}
 
             <SettingsButton />
 

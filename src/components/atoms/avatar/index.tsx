@@ -55,8 +55,8 @@ const getSizeStyle = (size?: string) => {
     case 'xs':
       return {
         fontSize: '0.75rem',
-        width: 24,
-        height: 24,
+        width: 20,
+        height: 20,
       };
 
     case 'sm':
