@@ -24,7 +24,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
 }));
 
 export const Profile = ({ gameName }: { gameName: string }) => {
-  const { data, version, isLoading, rankPoints } = useLogic(gameName);
+  const { data, version, isLoading, rankPoints, isLoadingRankPoints } = useLogic(gameName);
   const mdDown = useResponsive('down', 'md');
 
   return (
@@ -66,9 +66,17 @@ export const Profile = ({ gameName }: { gameName: string }) => {
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
               <Stack marginBottom={1}>
-                <RankPoint title="Rank đơn" rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_SOLO_5x5')} />
+                <RankPoint
+                  loading={isLoadingRankPoints}
+                  title="Rank đơn"
+                  rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_SOLO_5x5')}
+                />
               </Stack>
-              <RankPoint title="Rank flex" rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_FLEX_SR')} />
+              <RankPoint
+                loading={isLoadingRankPoints}
+                title="Rank flex"
+                rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_FLEX_SR')}
+              />
             </Grid>
             <Grid item xs={12} md={8}>
               <History puuid={data?.puuid} />
