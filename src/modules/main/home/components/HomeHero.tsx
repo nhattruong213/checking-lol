@@ -55,7 +55,7 @@ const StyledTextGradient = styled(m.h1)(({ theme }) => ({
   letterSpacing: 8,
   textAlign: 'center',
   backgroundSize: '400%',
-  fontSize: `${44 / 16}rem`,
+  fontSize: `${54 / 16}rem`,
   fontFamily: secondaryFont.style.fontFamily,
   [theme.breakpoints.up('md')]: {
     fontSize: `${64 / 16}rem`,
@@ -192,6 +192,16 @@ export const HomeHero = () => {
       }}
     >
       <m.div variants={varFade().in}>
+        <Typography
+          variant="h2"
+          sx={{
+            textAlign: 'center',
+          }}
+        >
+          {'League of legends'}
+        </Typography>
+      </m.div>
+      <m.div variants={varFade().in}>
         <StyledTextGradient
           animate={{ backgroundPosition: '200% center' }}
           transition={{
@@ -201,7 +211,7 @@ export const HomeHero = () => {
             repeat: Infinity,
           }}
         >
-          {'League of legends'}
+          {'FF'}
         </StyledTextGradient>
       </m.div>
 
@@ -209,6 +219,19 @@ export const HomeHero = () => {
         <FormProvider methods={methods} onSubmit={handleOnSubmit}>
           <Stack sx={{ marginBottom: 4, width: '100%', position: 'relative' }}>
             <TextField
+              sx={(theme) => ({
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: theme.palette.primary.main,
+                  },
+                  '&:hover fieldset': {
+                    borderColor: theme.palette.primary.main,
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: theme.palette.primary.main,
+                  },
+                },
+              })}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="start">
@@ -236,7 +259,9 @@ export const HomeHero = () => {
 
       <m.div variants={varFade().in}>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          {'Liên Minh Săm Soi Plus Check lịch sử đấu liên minh huyền thoại, tra cứu thông tin người chơi.'}
+          {
+            'FF - Nền tảng theo dõi và phân tích lịch sử đấu Liên Minh Huyền Thoại hàng đầu. Dễ dàng tra cứu thông tin người chơi, thống kê chi tiết trận đấu, và theo dõi xếp hạng một cách nhanh chóng.'
+          }
         </Typography>
       </m.div>
     </Stack>

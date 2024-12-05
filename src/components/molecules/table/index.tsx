@@ -1,4 +1,4 @@
-import { LinearProgress, SxProps, Table, TableBody, TableContainer, TableRow } from '@mui/material';
+import { SxProps, Table, TableBody, TableContainer, TableRow } from '@mui/material';
 import { Theme } from '@mui/system';
 import { ReactNode } from 'react';
 
@@ -32,7 +32,6 @@ type Props<T> = {
   onSelectRow?: (inputValue: string | number) => void;
   onSelectAllRows?: (checked: boolean, values: (string | number)[]) => void;
   recordsTotal?: number;
-  loading?: boolean;
 };
 
 export const DataTableNNT = <T extends Row>(props: Props<T>) => {
@@ -51,7 +50,6 @@ export const DataTableNNT = <T extends Row>(props: Props<T>) => {
     selected,
     rowsPerPageOptions,
     recordsTotal = items.length,
-    loading = false,
     onChangePage,
     onChangeRowsPerPage,
     onSelectRow,
@@ -64,7 +62,6 @@ export const DataTableNNT = <T extends Row>(props: Props<T>) => {
 
   return (
     <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-      {loading && <LinearProgress />}
       {selected && (
         <TableSelectActionNNT
           numSelected={selected.length}

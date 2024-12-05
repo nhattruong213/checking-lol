@@ -102,7 +102,9 @@ export const Footer = () => {
                 mx: { xs: 'auto', md: 'unset' },
               }}
             >
-              {'Liên Minh Săm Soi Plus Check lịch sử đấu liên minh huyền thoại, tra cứu thông tin người chơi.'}
+              {
+                'FF - Nền tảng theo dõi và phân tích lịch sử đấu Liên Minh Huyền Thoại hàng đầu. Dễ dàng tra cứu thông tin người chơi, thống kê chi tiết trận đấu, và theo dõi xếp hạng một cách nhanh chóng.'
+              }
             </Typography>
 
             <Stack

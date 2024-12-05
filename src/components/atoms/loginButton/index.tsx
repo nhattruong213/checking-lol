@@ -11,10 +11,10 @@ type Props = {
 };
 
 export const LoginButton = ({ sx }: Props) => {
-  const logo = <SvgColor src="/assets/icons/logo/riot.svg" sx={{ marginRight: 1, width: 20, height: 20, cursor: 'pointer', ...sx }} />;
+  const logo = <SvgColor src="/assets/icons/logo/riot.svg" sx={{ marginRight: 1, width: 18, height: 18, cursor: 'pointer', ...sx }} />;
 
   return (
-    <Button component={Link} href={'/login'} variant="outlined" sx={{ mr: 2, ...sx }}>
+    <Button component={Link} href={'/login'} variant="outlined" sx={{ ml: 2, px: '10px', py: '2px', ...sx }}>
       {logo}
       {'Login'}
     </Button>

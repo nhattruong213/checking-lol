@@ -1,5 +1,6 @@
 import { Box, Card, Link as LinkMui, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { AvatarCustom } from '@/components/atoms/avatar';
 import { Label } from '@/components/atoms/label';
@@ -123,7 +124,7 @@ export const Match = ({ match, puuid, version }: { match: any; puuid?: string; v
               if (summoner[achievement.id] > 0 || summoner[achievement.id])
                 return (
                   <Label key={achievement.id} sx={{ background: summoner.win ? 'rgba(46, 192, 255, 0.2)' : 'rgba(255, 34, 73, 0.2)' }}>
-                    {`${summoner[achievement.id]} ${achievement.name}`}
+                    {`${summoner[achievement.id] == true ? '' : summoner[achievement.id]} ${achievement.name}`}
                   </Label>
                 );
             })}
@@ -137,6 +138,8 @@ export const Match = ({ match, puuid, version }: { match: any; puuid?: string; v
                   <Box key={index} display="flex" alignItems="center">
                     <AvatarCustom size="xs" src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${player.championName}.png`} />
                     <LinkMui
+                      component={Link}
+                      href={`/profile/${encodeURIComponent(`${player.riotIdGameName}#${player.riotIdTagline}`)}`}
                       sx={{
                         fontSize: 12,
                         ml: 0.5,
@@ -157,6 +160,8 @@ export const Match = ({ match, puuid, version }: { match: any; puuid?: string; v
                   <Box key={index} display="flex" alignItems="center">
                     <AvatarCustom size="xs" src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${player.championName}.png`} />
                     <LinkMui
+                      component={Link}
+                      href={`/profile/${encodeURIComponent(`${player.riotIdGameName}#${player.riotIdTagline}`)}`}
                       sx={{
                         fontSize: 12,
                         ml: 0.5,

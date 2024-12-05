@@ -1,4 +1,4 @@
-import { Box, Card, Skeleton, Stack } from '@mui/material';
+import { alpha, Box, Card, Skeleton, Stack } from '@mui/material';
 
 import { useResponsive } from '@/hooks/useResponsive';
 
@@ -8,10 +8,10 @@ export const MatchSkeleton = () => {
   const smUp = useResponsive('up', 'sm');
 
   return [...Array(5)].map((_, index) => (
-    <Card key={index} sx={{ p: 2, borderRadius: 1 }}>
+    <Card key={index} sx={{ p: 2, borderRadius: 1, mb: 1, border: 1, borderColor: (theme) => alpha(theme.palette.grey[500], 0.08) }}>
       <Box mb={2} display="flex" alignItems="center" justifyContent="space-between">
         <Box display="flex" alignItems="center">
-          <Skeleton variant="rectangular" width={120} height={25} />
+          <Skeleton variant="text" width={120} height={25} />
           <Skeleton variant="text" sx={{ ml: 2, width: 100 }} />
           <Skeleton variant="text" sx={{ ml: 1.5, width: 50 }} />
         </Box>
