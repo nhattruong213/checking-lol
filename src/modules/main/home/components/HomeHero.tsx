@@ -1,4 +1,4 @@
-import { Button, InputAdornment } from '@mui/material';
+import { InputAdornment, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
@@ -6,19 +6,18 @@ import { alpha, styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { m, useScroll } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
 
 import { MotionContainer } from '@/components/atoms/animate/motion-container';
 import { varFade } from '@/components/atoms/animate/variants';
-import { FormProvider } from '@/components/atoms/formProvider';
 import { Iconify } from '@/components/atoms/iconify';
-import { TextField } from '@/components/atoms/textField';
+import { AutoComplated } from '@/components/molecules/autoCompleted';
 import { HEADER } from '@/constants/app';
 import { useResponsive } from '@/hooks/useResponsive';
 import { bgBlur, bgGradient, textGradient } from '@/styles/theme/css';
 import { secondaryFont } from '@/styles/theme/typography';
+
+import { useSuggest } from './hooks/useSuggest';
 
 const StyledRoot = styled('div')(({ theme }) => ({
   ...bgGradient({
@@ -159,24 +158,30 @@ export const HomeHero = () => {
 
   const hide = percent > 120;
 
-  const methods = useForm({});
-
-  const { handleSubmit, watch } = methods;
-  const router = useRouter();
-
-  const searchValue = watch('search');
+  const [value, setValue] = useState('');
+  const [autoComplated, setAutoComplated] = useState(false);
   const [showHash, setShowHash] = useState(true);
+  const { account, version } = useSuggest(value);
   const textWidthRef = useRef<HTMLDivElement>(null);
   const textWidth = textWidthRef.current?.offsetWidth || 0;
 
-  useEffect(() => {
-    setShowHash(!searchValue?.includes('#'));
-  }, [searchValue]);
+  const handleFocus = () => {
+    setAutoComplated(true);
+  };
 
-  const handleOnSubmit = handleSubmit((data) => {
-    const encodedGameName = encodeURIComponent(data.search);
-    router.push(`/profile/${encodedGameName}`);
-  });
+  const handleBlur = () => {
+    const timer = setTimeout(() => {
+      setAutoComplated(false);
+    }, 200);
+
+    return () => clearTimeout(timer);
+  };
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setValue(value);
+    setShowHash(!value?.includes('#'));
+  };
 
   const renderDescription = (
     <Stack
@@ -216,45 +221,45 @@ export const HomeHero = () => {
       </m.div>
 
       <m.div style={{ width: '100%' }} variants={varFade().in}>
-        <FormProvider methods={methods} onSubmit={handleOnSubmit}>
-          <Stack sx={{ marginBottom: 4, width: '100%', position: 'relative' }}>
-            <TextField
-              sx={(theme) => ({
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                  '&:hover fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
+        <Stack sx={{ marginBottom: 4, width: '100%', position: 'relative' }}>
+          <TextField
+            fullWidth
+            value={value}
+            sx={(theme) => ({
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: theme.palette.primary.main,
                 },
-              })}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify width={25} icon="arcticons:emoji-search"></Iconify>
-                  </InputAdornment>
-                ),
-              }}
-              // onChange={handleInputChange}
-              placeholder="Name player, i.e. player#VN1"
-              name="search"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
-            <Box ref={textWidthRef} sx={{ position: 'absolute', visibility: 'hidden', whiteSpace: 'pre', fontSize: '16px', fontFamily: 'inherit' }}>
-              {searchValue}
-            </Box>
-            {showHash && searchValue && <Box sx={{ position: 'absolute', top: '2rem', left: `${textWidth + 23}px` }}>{'#'}</Box>}
-            <Button type="submit" variant="contained" color="primary">
-              {'Tìm kiếm'}
-            </Button>
-          </Stack>
-        </FormProvider>
+                '&:hover fieldset': {
+                  borderColor: theme.palette.primary.main,
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: theme.palette.primary.main,
+                },
+              },
+            })}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">
+                  <Iconify width={25} icon="arcticons:emoji-search"></Iconify>
+                </InputAdornment>
+              ),
+            }}
+            placeholder="Name player, i.e. player#VN1"
+            name="search"
+            variant="outlined"
+            margin="normal"
+            onChange={handleOnChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            autoComplete="off"
+          />
+          <Box ref={textWidthRef} sx={{ position: 'absolute', visibility: 'hidden', whiteSpace: 'pre', fontSize: '16px', fontFamily: 'inherit' }}>
+            {value}
+          </Box>
+          {showHash && value && <Box sx={{ position: 'absolute', top: '2rem', left: `${textWidth + 23}px` }}>{'#'}</Box>}
+          {autoComplated && version && <AutoComplated account={account} version={version} />}
+        </Stack>
       </m.div>
 
       <m.div variants={varFade().in}>
