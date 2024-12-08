@@ -22,7 +22,7 @@ const getColorStyle = ({ type }: { type?: string }) => {
       return {
         color: 'pink',
         border: '1px solid',
-        borderColor: '#00A76F',
+        borderColor: 'transparent',
         background: 'transparent',
       };
 

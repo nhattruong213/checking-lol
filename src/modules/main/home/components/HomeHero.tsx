@@ -23,7 +23,7 @@ import { secondaryFont } from '@/styles/theme/typography';
 const StyledRoot = styled('div')(({ theme }) => ({
   ...bgGradient({
     color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
-    imgUrl: '/assets/background/overlay_3.jpg',
+    imgUrl: '/assets/background/bg3.jpg',
   }),
   width: '100%',
   height: '100vh',
