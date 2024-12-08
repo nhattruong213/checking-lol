@@ -1,4 +1,4 @@
-import { Button, InputAdornment } from '@mui/material';
+import { Card, InputAdornment, List, ListItem, ListItemButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
@@ -12,13 +12,17 @@ import { useForm } from 'react-hook-form';
 
 import { MotionContainer } from '@/components/atoms/animate/motion-container';
 import { varFade } from '@/components/atoms/animate/variants';
+import { AvatarCustom } from '@/components/atoms/avatar';
 import { FormProvider } from '@/components/atoms/formProvider';
 import { Iconify } from '@/components/atoms/iconify';
+import { Label } from '@/components/atoms/label';
 import { TextField } from '@/components/atoms/textField';
 import { HEADER } from '@/constants/app';
 import { useResponsive } from '@/hooks/useResponsive';
 import { bgBlur, bgGradient, textGradient } from '@/styles/theme/css';
 import { secondaryFont } from '@/styles/theme/typography';
+
+import { useSuggest } from './hooks/useSuggest';
 
 const StyledRoot = styled('div')(({ theme }) => ({
   ...bgGradient({
@@ -166,6 +170,7 @@ export const HomeHero = () => {
 
   const searchValue = watch('search');
   const [showHash, setShowHash] = useState(true);
+  const { account, version } = useSuggest(searchValue);
   const textWidthRef = useRef<HTMLDivElement>(null);
   const textWidth = textWidthRef.current?.offsetWidth || 0;
 
@@ -239,7 +244,6 @@ export const HomeHero = () => {
                   </InputAdornment>
                 ),
               }}
-              // onChange={handleInputChange}
               placeholder="Name player, i.e. player#VN1"
               name="search"
               variant="outlined"
@@ -250,9 +254,32 @@ export const HomeHero = () => {
               {searchValue}
             </Box>
             {showHash && searchValue && <Box sx={{ position: 'absolute', top: '2rem', left: `${textWidth + 23}px` }}>{'#'}</Box>}
-            <Button type="submit" variant="contained" color="primary">
-              {'Tìm kiếm'}
-            </Button>
+            <Card sx={{ width: 1, p: 1.5 }}>
+              <Label sx={{ height: 35, background: theme.palette.primary.lighter }}>{'Search for match history using: GameName#tagline'}</Label>
+              <Box sx={{ display: 'flex', gap: 2, mt: 1.5 }}>
+                <Box sx={{ width: '30%', display: 'flex' }}>
+                  <Iconify width={23} icon="circum:search" />
+                  <Typography ml={1} variant="subtitle2">
+                    {'Search Result'}
+                  </Typography>
+                </Box>
+                <List sx={{ width: '70%', height: 220, overflow: 'auto' }}>
+                  {account?.map((item: any, index: string) => {
+                    return (
+                      <ListItem key={index}>
+                        <ListItemButton>
+                          <AvatarCustom
+                            size={'sm'}
+                            type="outlined"
+                            src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${item?.profile_icon}.png`}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </Box>
+            </Card>
           </Stack>
         </FormProvider>
       </m.div>
