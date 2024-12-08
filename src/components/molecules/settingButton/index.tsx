@@ -15,7 +15,7 @@ export const SettingsButton = () => {
         height: 45,
       }}
     >
-      <Iconify icon="tabler:settings-cog" width={24} />
+      <Iconify icon="ic:baseline-settings" width={24} />
     </IconButton>
   );
 };
