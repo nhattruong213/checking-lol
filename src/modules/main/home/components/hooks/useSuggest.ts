@@ -8,7 +8,7 @@ export const useSuggest = (searchParam?: string) => {
 
   const debouncedSearchParam = useDebounce(searchParam, 100);
 
-  const { data: account } = useQuery({
+  const { data: account, isLoading } = useQuery({
     apiConfig: suggestName,
     payload: {
       gameName: debouncedSearchParam,
@@ -20,5 +20,5 @@ export const useSuggest = (searchParam?: string) => {
     },
   });
 
-  return { account, version };
+  return { account, version, isLoading };
 };
