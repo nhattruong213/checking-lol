@@ -13,7 +13,7 @@ import { StyledTextGradient } from './style';
 export const FormSuggest = () => {
   const [value, setValue] = useState('');
   const [autoComplated, setAutoComplated] = useState(false);
-  const { account, version } = useSuggest(value);
+  const { account, version, isLoading } = useSuggest(value);
 
   const handleFocus = () => {
     setAutoComplated(true);
@@ -56,17 +56,7 @@ export const FormSuggest = () => {
         </Typography>
       </m.div>
       <m.div variants={varFade().in}>
-        <StyledTextGradient
-          animate={{ backgroundPosition: '200% center' }}
-          transition={{
-            repeatType: 'reverse',
-            ease: 'linear',
-            duration: 20,
-            repeat: Infinity,
-          }}
-        >
-          {'FF'}
-        </StyledTextGradient>
+        <StyledTextGradient>{'FF'}</StyledTextGradient>
       </m.div>
 
       <m.div style={{ width: '100%' }} variants={varFade().in}>
@@ -103,7 +93,7 @@ export const FormSuggest = () => {
             onBlur={handleBlur}
             autoComplete="off"
           />
-          {autoComplated && version && <AutoComplated searchValue={value} account={account} version={version} />}
+          {autoComplated && version && <AutoComplated searchValue={value} account={account} version={version} isLoading={isLoading} />}
         </Stack>
       </m.div>
 
