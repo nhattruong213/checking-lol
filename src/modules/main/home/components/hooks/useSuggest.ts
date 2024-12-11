@@ -6,7 +6,7 @@ import { useAppSelector } from '@/stores/hooks';
 export const useSuggest = (searchParam?: string) => {
   const { version } = useAppSelector((state) => state.common);
 
-  const debouncedSearchParam = useDebounce(searchParam, 500);
+  const debouncedSearchParam = useDebounce(searchParam, 100);
 
   const { data: account } = useQuery({
     apiConfig: suggestName,

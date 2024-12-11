@@ -48,7 +48,7 @@ const initState = {
   ],
 };
 
-export const AutoComplated = ({ account, version }: { account?: TAcount[]; version: string }) => {
+export const AutoComplated = ({ account, version, searchValue }: { account?: TAcount[]; version: string; searchValue?: string }) => {
   const router = useRouter();
   const theme = useTheme();
   const { state, update } = useLocalStorage(STORAGE_KEY, initState);
@@ -62,7 +62,7 @@ export const AutoComplated = ({ account, version }: { account?: TAcount[]; versi
     router.push(`/profile/${encodeURIComponent(`${account.game_name}#${account.tagline}`)}`);
   };
 
-  const data = account ? account : state.data;
+  const data = searchValue ? account : state.data;
 
   return (
     <Card sx={{ width: 1, position: 'absolute', top: 80, left: 0, borderRadius: 1 }}>

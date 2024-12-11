@@ -258,7 +258,7 @@ export const HomeHero = () => {
             {value}
           </Box>
           {showHash && value && <Box sx={{ position: 'absolute', top: '2rem', left: `${textWidth + 23}px` }}>{'#'}</Box>}
-          {autoComplated && version && <AutoComplated account={account} version={version} />}
+          {autoComplated && version && <AutoComplated searchValue={value} account={account} version={version} />}
         </Stack>
       </m.div>
 
