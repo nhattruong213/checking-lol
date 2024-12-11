@@ -6,6 +6,7 @@ import { varFade } from '@/components/atoms/animate/variants';
 import { Iconify } from '@/components/atoms/iconify';
 import { AutoComplated } from '@/components/molecules/autoCompleted';
 import { HEADER } from '@/constants/app';
+import { useResponsive } from '@/hooks/useResponsive';
 
 import { useSuggest } from './hooks/useSuggest';
 import { StyledTextGradient } from './style';
@@ -14,7 +15,7 @@ export const FormSuggest = () => {
   const [value, setValue] = useState('');
   const [autoComplated, setAutoComplated] = useState(false);
   const { account, version, isLoading } = useSuggest(value);
-
+  const mdUp = useResponsive('up', 'md');
   const handleFocus = () => {
     setAutoComplated(true);
   };
@@ -56,7 +57,22 @@ export const FormSuggest = () => {
         </Typography>
       </m.div>
       <m.div variants={varFade().in}>
-        <StyledTextGradient>{'FF'}</StyledTextGradient>
+        <StyledTextGradient
+          animate={mdUp ? { backgroundPosition: '200% center' } : {}}
+          transition={
+            mdUp
+              ? {
+                  repeatType: 'reverse',
+                  ease: 'linear',
+                  duration: 10,
+                  repeat: Infinity,
+                  repeatDelay: 5,
+                }
+              : undefined
+          }
+        >
+          {'FF'}
+        </StyledTextGradient>
       </m.div>
 
       <m.div style={{ width: '100%' }} variants={varFade().in}>
