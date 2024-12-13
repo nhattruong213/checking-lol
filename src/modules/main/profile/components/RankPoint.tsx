@@ -17,7 +17,7 @@ export const RankPoint = ({ rankPoint, title, loading }: { rankPoint?: TRankPoin
   }
 
   return (
-    <Card sx={{ p: 2, borderRadius: 0 }}>
+    <Card sx={{ p: 2, borderRadius: 0, height: 1 }}>
       <Box display="flex" alignItems="center">
         <Iconify icon="game-icons:rank-3"></Iconify>
         <Typography sx={{ ml: 1 }} variant="subtitle1">
