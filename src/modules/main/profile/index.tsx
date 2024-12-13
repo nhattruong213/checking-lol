@@ -35,6 +35,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
 export const Profile = ({ gameName }: { gameName: string }) => {
   const [queueId, setQueueId] = useState<string | number>('all');
   const mdDown = useResponsive('down', 'md');
+  const smd = useResponsive('between', 700, 'md');
 
   const { data, version, isLoading, rankPoints, isLoadingRankPoints } = useLogic(gameName);
   const { matches, isLoadingMatches } = useMatch(data?.puuid, queueId);
@@ -60,12 +61,16 @@ export const Profile = ({ gameName }: { gameName: string }) => {
           <Container component={MotionViewport} sx={{ height: 1 }}>
             <Stack sx={{ width: 1, mb: 2 }}>
               <Card
-                sx={{
+                sx={(theme) => ({
                   mt: 2,
                   py: 4,
                   pl: 3,
                   borderRadius: 0,
-                }}
+                  ...bgGradient({
+                    color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
+                    imgUrl: '/assets/background/overlay_3.jpg',
+                  }),
+                })}
               >
                 <Box display="flex" alignItems="center">
                   <Box sx={{ position: 'relative' }}>
@@ -101,46 +106,75 @@ export const Profile = ({ gameName }: { gameName: string }) => {
                 </Box>
               </Card>
             </Stack>
-            <Grid container spacing={2} pb={5}>
-              <Grid item xs={12} md={4}>
-                <Stack marginBottom={1}>
+
+            {mdDown && (
+              <Box sx={{ display: 'flex', flexDirection: smd ? 'row' : 'column', gap: smd ? 1 : 0 }}>
+                <Stack width={smd ? '50%' : 1} marginBottom={1}>
                   <RankPoint
                     loading={isLoadingRankPoints}
                     title="RANK ĐƠN"
                     rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_SOLO_5x5')}
                   />
                 </Stack>
-                <Stack marginBottom={1}>
+                <Stack width={smd ? '50%' : 1} marginBottom={1}>
                   <RankPoint
                     loading={isLoadingRankPoints}
                     title="RANK LINH HOẠT"
                     rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_FLEX_SR')}
                   />
                 </Stack>
-                <Stack marginBottom={1}>{!matches ? <AnalysisSkeleton /> : <AnalysisMatch matches={matches} puuid={data?.puuid} />}</Stack>
+              </Box>
+            )}
+            <Stack>
+              <Tabs
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile={true}
+                value={queueId}
+                onChange={handleChangeQueue}
+                sx={{
+                  px: 2.5,
+                  boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+                }}
+              >
+                {QUEUE_OPTIONS.map((queue) => (
+                  <Tab key={queue.queueId} value={queue.queueId} label={queue.description} />
+                ))}
+              </Tabs>
+              <Stack sx={{ borderBottom: '1', mb: 2 }} />
+            </Stack>
+            <Grid container spacing={1} pb={5}>
+              <Grid item xs={12} md={4}>
+                {!mdDown && (
+                  <>
+                    <Stack marginBottom={1}>
+                      <RankPoint
+                        loading={isLoadingRankPoints}
+                        title="RANK ĐƠN"
+                        rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_SOLO_5x5')}
+                      />
+                    </Stack>
+                    <Stack marginBottom={1}>
+                      <RankPoint
+                        loading={isLoadingRankPoints}
+                        title="RANK LINH HOẠT"
+                        rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_FLEX_SR')}
+                      />
+                    </Stack>
+                  </>
+                )}
 
-                <Stack marginBottom={1}>
-                  <TopChampions matches={matches} puuid={data?.puuid} />
-                </Stack>
+                <Box sx={{ display: 'flex', flexDirection: smd ? 'row' : 'column', gap: smd ? 1 : 0 }}>
+                  <Stack width={smd ? '50%' : 1} marginBottom={1}>
+                    {!matches ? <AnalysisSkeleton /> : <AnalysisMatch matches={matches} puuid={data?.puuid} />}
+                  </Stack>
+                  <Stack width={smd ? '50%' : 1} marginBottom={1}>
+                    <TopChampions matches={matches} puuid={data?.puuid} />
+                  </Stack>
+                </Box>
               </Grid>
               <Grid item xs={12} md={8}>
-                <Card sx={{ p: 1, borderRadius: 0, pt: 0.3 }}>
-                  <Tabs
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    allowScrollButtonsMobile={true}
-                    value={queueId}
-                    onChange={handleChangeQueue}
-                    sx={{
-                      px: 2.5,
-                      boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-                    }}
-                  >
-                    {QUEUE_OPTIONS.map((queue) => (
-                      <Tab key={queue.queueId} value={queue.queueId} label={queue.description} />
-                    ))}
-                  </Tabs>
-                  <Stack sx={{ borderBottom: '1', mb: 2 }} />
+                <Card sx={{ p: 1, borderRadius: 0, pt: 1 }}>
                   {isLoadingMatches ? (
                     <MatchSkeleton />
                   ) : (

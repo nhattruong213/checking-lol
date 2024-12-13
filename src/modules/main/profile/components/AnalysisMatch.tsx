@@ -1,12 +1,15 @@
-import { alpha, Box, Stack, Typography } from '@mui/material';
+import { alpha, Box, Stack, Typography, useTheme } from '@mui/material';
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
 import Image from 'next/image';
+import { Doughnut } from 'react-chartjs-2';
 
 import { Card } from '@/components/atoms/card';
 import { Iconify } from '@/components/atoms/iconify';
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const AnalysisMatch = ({ matches, puuid }: { matches: any; puuid: string }) => {
   const totalMatches = matches.length;
-
+  const theme = useTheme();
   const wins = matches.filter((match: any) => {
     const { info } = match;
     const { participants } = info;
@@ -66,8 +69,31 @@ export const AnalysisMatch = ({ matches, puuid }: { matches: any; puuid: string 
     { role: 'UTILITY', src: '/assets/position/sup.png' },
   ];
 
+  const donutData = {
+    labels: ['Thắng', 'Thua'],
+    datasets: [
+      {
+        data: [wins, losses],
+        backgroundColor: [theme.palette.primary.main, '#e0e0e0'],
+        borderWidth: 1,
+        cutout: '70%',
+      },
+    ],
+  };
+
+  const donutOptions = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+  };
+
   return (
-    <Card sx={{ borderRadius: 0, p: 2 }}>
+    <Card sx={{ borderRadius: 0, p: 2, height: '100%' }}>
       <Box display="flex" alignItems="center">
         <Iconify icon="mdi-light:chart-line"></Iconify>
         <Typography sx={{ ml: 1, textTransform: 'uppercase' }} variant="subtitle1">
@@ -75,52 +101,57 @@ export const AnalysisMatch = ({ matches, puuid }: { matches: any; puuid: string 
         </Typography>
       </Box>
       <Box sx={{ my: 1, borderBottom: 1, borderColor: (theme) => alpha(theme.palette.grey[500], 0.08) }}></Box>
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="subtitle1">{`${wins}W - ${losses}L`}</Typography>
-        <Typography variant="subtitle1">{`WR: ${winRate} %`}</Typography>
-      </Box>
+      <Box sx={{ display: 'flex', gap: 4 }}>
+        <Box width={'40%'}>
+          <Typography whiteSpace={'nowrap'} variant="subtitle2">{`${totalMatches} trận gần đây`}</Typography>
+          <Box sx={{ position: 'relative', height: 100, width: 100, mt: 2 }}>
+            <Doughnut data={donutData} options={donutOptions} />
+            <Typography sx={{ position: 'absolute', top: 40, right: 25 }} variant="overline">{`${winRate} %`}</Typography>
+          </Box>
+          <Box display="flex" mt={1} flexDirection="column">
+            <Typography variant="subtitle2">
+              {kda} {'KDA'}
+            </Typography>
+            <Typography variant="caption">{`${avgKills}/${avgDeaths}/${avgAssists}`}</Typography>
+          </Box>
+        </Box>
+        <Box width={'60%'}>
+          <Typography whiteSpace={'nowrap'} textAlign={'center'} variant="subtitle2">
+            {'Vai Trò Yêu Thích'}
+          </Typography>
+          <Box display="flex" alignItems="flex-end" justifyContent="space-around" mt={2}>
+            {rolesData.map(({ role, src }) => {
+              const roleData = rolePercentages.find((r) => r.role === role) || { percentage: 0 };
 
-      <Typography mt={1} variant="h4">
-        {kda} {'KDA'}
-      </Typography>
-      <Typography variant="body1">
-        {'Average:'} {avgKills} {'/'} {avgDeaths} {'/'} {avgAssists}
-      </Typography>
-
-      <Box mt={2}>
-        <Typography variant="h6">{'Vai Trò Yêu Thích'}</Typography>
-        <Box display="flex" alignItems="flex-end" justifyContent="space-around" mt={2}>
-          {rolesData.map(({ role, src }) => {
-            const roleData = rolePercentages.find((r) => r.role === role) || { percentage: 0 };
-
-            return (
-              <Box key={role} textAlign="center">
-                <Box
-                  sx={{
-                    height: 150,
-                    width: 20,
-                    backgroundColor: '#e0e0e0',
-                    position: 'relative',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                  }}
-                >
+              return (
+                <Box key={role} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <Box
-                    sx={(theme) => ({
-                      height: `${roleData.percentage}%`,
-                      width: '100%',
-                      backgroundColor: theme.palette.primary.main,
-                      position: 'absolute',
-                      bottom: 0,
-                    })}
-                  />
+                    sx={{
+                      height: 100,
+                      width: 8,
+                      backgroundColor: '#e0e0e0',
+                      position: 'relative',
+                      borderRadius: '4px',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <Box
+                      sx={(theme) => ({
+                        height: `${roleData.percentage}%`,
+                        width: '100%',
+                        backgroundColor: theme.palette.primary.main,
+                        position: 'absolute',
+                        bottom: 0,
+                      })}
+                    />
+                  </Box>
+                  <Stack mt={2}>
+                    <Image src={src} alt={role} width={16} height={16} />
+                  </Stack>
                 </Box>
-                <Stack mt={2}>
-                  <Image src={src} alt={role} width={16} height={16} />
-                </Stack>
-              </Box>
-            );
-          })}
+              );
+            })}
+          </Box>
         </Box>
       </Box>
     </Card>

@@ -13,17 +13,18 @@ type ChampionStats = {
   assists: number;
   gamesPlayed: number;
   kda?: string;
+  cs: number;
 };
 
 export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }) => {
   const { version } = useAppSelector((state) => state.common);
   if (!matches) {
     return (
-      <Card sx={{ borderRadius: 0, p: 2 }}>
+      <Card sx={{ borderRadius: 0, p: 2, height: '100%' }}>
         <Box display="flex" alignItems="center">
-          <Iconify icon="hugeicons:champion"></Iconify>
+          <Iconify icon="mynaui:chart-line"></Iconify>
           <Typography sx={{ ml: 1, textTransform: 'uppercase' }} variant="subtitle1">
-            {'Top 3 Tướng Chơi Nhiều Nhất'}
+            {'Chơi Nhiều Nhất Gần Đây'}
           </Typography>
         </Box>
         <Box sx={{ my: 1, borderBottom: 1, borderColor: (theme) => alpha(theme.palette.grey[500], 0.08) }}></Box>
@@ -41,7 +42,7 @@ export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }
     const { participants } = info;
 
     participants.forEach((summoner: any) => {
-      const { puuid: summonerPuuid, championName, kills, deaths, assists, win } = summoner;
+      const { puuid: summonerPuuid, championName, kills, deaths, assists, win, totalMinionsKilled, neutralMinionsKilled } = summoner;
       if (summonerPuuid === puuid) {
         if (!acc[championName]) {
           acc[championName] = {
@@ -51,6 +52,7 @@ export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }
             deaths: 0,
             assists: 0,
             gamesPlayed: 0,
+            cs: 0,
           };
         }
 
@@ -58,6 +60,7 @@ export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }
         acc[championName].kills += kills;
         acc[championName].deaths += deaths;
         acc[championName].assists += assists;
+        acc[championName].cs += totalMinionsKilled + neutralMinionsKilled;
         if (win) acc[championName].wins++;
         else acc[championName].losses++;
       }
@@ -71,27 +74,50 @@ export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }
       championName,
       ...stats,
       kda: ((stats.kills + stats.assists) / stats.deaths).toFixed(2),
+      avg: `${(stats.kills / stats.gamesPlayed).toFixed(1)}/${(stats.deaths / stats.gamesPlayed).toFixed(1)}/${(
+        stats.assists / stats.gamesPlayed
+      ).toFixed(1)}`,
+      csAvg: (stats.cs / stats.gamesPlayed).toFixed(1),
     }))
     .sort((a, b) => b.gamesPlayed - a.gamesPlayed);
 
-  const topChampions = championList.slice(0, 3);
+  const topChampions = championList.slice(0, 4);
 
   return (
-    <Card sx={{ borderRadius: 0, p: 2 }}>
+    <Card sx={{ borderRadius: 0, p: 2, height: '100%' }}>
       <Box display="flex" alignItems="center">
-        <Iconify icon="hugeicons:champion"></Iconify>
+        <Iconify icon="mynaui:chart-line"></Iconify>
         <Typography sx={{ ml: 1, textTransform: 'uppercase' }} variant="subtitle1">
-          {'Top 3 Tướng Chơi Nhiều Nhất'}
+          {'Chơi Nhiều Nhất Gần Đây'}
         </Typography>
       </Box>
       <Box sx={{ my: 1, borderBottom: 1, borderColor: (theme) => alpha(theme.palette.grey[500], 0.08) }}></Box>
 
       {topChampions.map((champion: any) => (
-        <Box key={champion.championName} sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-          <AvatarCustom src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.championName}.png`} />
+        <Box key={champion.championName} sx={{ mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box display={'flex'} alignItems={'center'}>
+            <AvatarCustom src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.championName}.png`} />
+            <Box ml={1}>
+              <Typography lineHeight={1} variant="subtitle2">
+                {champion.championName}
+              </Typography>
+              <Typography variant="caption">{`${champion.gamesPlayed} game`}</Typography>
+            </Box>
+          </Box>
 
-          <Typography ml={2}>{`${champion.wins}W - ${champion.losses}L`}</Typography>
-          <Typography sx={(theme) => ({ color: theme.palette.primary.main })} ml={2}>{`${champion.kda} KDA`}</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}>
+            <Typography lineHeight={1} variant="subtitle2">{`${champion.wins}W - ${champion.losses}L`}</Typography>
+            <Typography variant="caption">{champion.avg}</Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}>
+            <Typography
+              lineHeight={1}
+              variant="subtitle2"
+              sx={(theme) => ({ color: theme.palette.primary.main })}
+            >{`${champion.kda} KDA`}</Typography>
+            <Typography variant="caption">{`${champion.csAvg} CS`}</Typography>
+          </Box>
         </Box>
       ))}
     </Card>
