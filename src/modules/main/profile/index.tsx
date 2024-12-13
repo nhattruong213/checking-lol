@@ -2,18 +2,26 @@
 
 import { alpha, Container, Grid, Typography } from '@mui/material';
 import { Box, Stack, styled } from '@mui/system';
+import { useCallback, useState } from 'react';
 
 import { MotionViewport } from '@/components/atoms/animate/motion-viewport';
 import { AvatarCustom } from '@/components/atoms/avatar';
 import { Card } from '@/components/atoms/card';
+import { Tab, Tabs } from '@/components/atoms/tabs';
 import { LoadingScreen } from '@/components/molecules/loading';
 import { MainLayout } from '@/components/organisms/main';
+import { QUEUE_OPTIONS } from '@/constants/app';
 import { useResponsive } from '@/hooks/useResponsive';
 import { bgGradient } from '@/styles/theme/css';
 
-import { History } from './components/History';
+import { AnalysisMatch } from './components/AnalysisMatch';
+import { AnalysisSkeleton } from './components/AnalysisSkeleton';
+import { Match } from './components/Match';
+import { MatchSkeleton } from './components/MatchSkeleton';
 import { RankPoint } from './components/RankPoint';
+import { TopChampions } from './components/TopChampions';
 import { useLogic } from './hooks/useLogic';
+import { useMatch } from './hooks/useMatch';
 import { TRankPoint } from './type';
 
 const StyledRoot = styled('div')(({ theme }) => ({
@@ -25,8 +33,18 @@ const StyledRoot = styled('div')(({ theme }) => ({
 }));
 
 export const Profile = ({ gameName }: { gameName: string }) => {
-  const { data, version, isLoading, rankPoints, isLoadingRankPoints } = useLogic(gameName);
+  const [queueId, setQueueId] = useState<string | number>('all');
   const mdDown = useResponsive('down', 'md');
+
+  const { data, version, isLoading, rankPoints, isLoadingRankPoints } = useLogic(gameName);
+  const { matches, isLoadingMatches } = useMatch(data?.puuid, queueId);
+
+  const handleChangeQueue = useCallback(
+    (event: React.SyntheticEvent, newValue: string | number) => {
+      setQueueId(newValue);
+    },
+    [setQueueId]
+  );
 
   return (
     <MainLayout>
@@ -92,14 +110,45 @@ export const Profile = ({ gameName }: { gameName: string }) => {
                     rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_SOLO_5x5')}
                   />
                 </Stack>
-                <RankPoint
-                  loading={isLoadingRankPoints}
-                  title="RANK LINH HOẠT"
-                  rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_FLEX_SR')}
-                />
+                <Stack marginBottom={1}>
+                  <RankPoint
+                    loading={isLoadingRankPoints}
+                    title="RANK LINH HOẠT"
+                    rankPoint={rankPoints?.find((ranked: TRankPoint) => ranked.queueType === 'RANKED_FLEX_SR')}
+                  />
+                </Stack>
+                <Stack marginBottom={1}>{!matches ? <AnalysisSkeleton /> : <AnalysisMatch matches={matches} puuid={data?.puuid} />}</Stack>
+
+                <Stack marginBottom={1}>
+                  <TopChampions matches={matches} puuid={data?.puuid} />
+                </Stack>
               </Grid>
               <Grid item xs={12} md={8}>
-                <History puuid={data?.puuid} />
+                <Card sx={{ p: 1, borderRadius: 0, pt: 0.3 }}>
+                  <Tabs
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    allowScrollButtonsMobile={true}
+                    value={queueId}
+                    onChange={handleChangeQueue}
+                    sx={{
+                      px: 2.5,
+                      boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+                    }}
+                  >
+                    {QUEUE_OPTIONS.map((queue) => (
+                      <Tab key={queue.queueId} value={queue.queueId} label={queue.description} />
+                    ))}
+                  </Tabs>
+                  <Stack sx={{ borderBottom: '1', mb: 2 }} />
+                  {isLoadingMatches ? (
+                    <MatchSkeleton />
+                  ) : (
+                    matches?.map((match: any, key: string) => {
+                      return <Match key={key} match={match} version={version} puuid={data?.puuid} />;
+                    })
+                  )}
+                </Card>
               </Grid>
             </Grid>
           </Container>
