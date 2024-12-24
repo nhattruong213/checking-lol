@@ -5,6 +5,8 @@ import { Card } from '@/components/atoms/card';
 import { Iconify } from '@/components/atoms/iconify';
 import { useAppSelector } from '@/stores/hooks';
 
+import { Participant, TMatch } from '../type';
+
 type ChampionStats = {
   wins: number;
   losses: number;
@@ -16,7 +18,18 @@ type ChampionStats = {
   cs: number;
 };
 
-export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }) => {
+type ChampionStatsMap = {
+  [key: string]: ChampionStats;
+};
+
+interface ChampionListItem extends ChampionStats {
+  championName: string;
+  kda: string;
+  avg: string;
+  csAvg: string;
+}
+
+export const TopChampions = ({ matches, puuid }: { matches: TMatch[]; puuid: string }) => {
   const { version } = useAppSelector((state) => state.common);
   if (!matches) {
     return (
@@ -37,11 +50,11 @@ export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }
     );
   }
 
-  const championStats: { [key: string]: ChampionStats } = matches.reduce((acc: any, match: any) => {
+  const championStats: { [key: string]: ChampionStats } = matches.reduce((acc: ChampionStatsMap, match: TMatch) => {
     const { info } = match;
     const { participants } = info;
 
-    participants.forEach((summoner: any) => {
+    participants.forEach((summoner: Participant) => {
       const { puuid: summonerPuuid, championName, kills, deaths, assists, win, totalMinionsKilled, neutralMinionsKilled } = summoner;
       if (summonerPuuid === puuid) {
         if (!acc[championName]) {
@@ -81,7 +94,7 @@ export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }
     }))
     .sort((a, b) => b.gamesPlayed - a.gamesPlayed);
 
-  const topChampions = championList.slice(0, 4);
+  const topChampions: ChampionListItem[] = championList.slice(0, 4);
 
   return (
     <Card sx={{ borderRadius: 0, p: 2, height: '100%' }}>
@@ -93,7 +106,7 @@ export const TopChampions = ({ matches, puuid }: { matches: any; puuid: string }
       </Box>
       <Box sx={{ my: 1, borderBottom: 1, borderColor: (theme) => alpha(theme.palette.grey[500], 0.08) }}></Box>
 
-      {topChampions.map((champion: any) => (
+      {topChampions.map((champion: ChampionListItem) => (
         <Box key={champion.championName} sx={{ mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box display={'flex'} alignItems={'center'}>
             <AvatarCustom src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.championName}.png`} />

@@ -2,12 +2,16 @@ import { alpha, Box, Card, Skeleton, Stack } from '@mui/material';
 
 import { useResponsive } from '@/hooks/useResponsive';
 
-export const MatchSkeleton = () => {
+type Tprops = {
+  itemCount?: number;
+};
+export const MatchSkeleton = (props: Tprops) => {
+  const { itemCount = 10 } = props;
   const mdDown = useResponsive('down', 'lg');
   const mdUp = useResponsive('up', 'md');
   const smUp = useResponsive('up', 'sm');
 
-  return [...Array(5)].map((_, index) => (
+  return [...Array(itemCount)].map((_, index) => (
     <Card key={index} sx={{ p: 2, borderRadius: 1, mb: 1, border: 1, borderColor: (theme) => alpha(theme.palette.grey[500], 0.08) }}>
       <Box mb={2} display="flex" alignItems="center" justifyContent="space-between">
         <Box display="flex" alignItems="center">

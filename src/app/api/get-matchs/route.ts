@@ -9,14 +9,10 @@ export async function GET(request: NextRequest) {
   const count = searchParams.get('count') ?? 10;
   const puuid = searchParams.get('puuid');
   const queueId = searchParams.get('queueId') ?? 'all';
-  const cacheKey = `${puuid}-${start}-${count}-${queueId}`;
   const queryQueue = queueId != 'all' ? `queue=${queueId}&` : '';
   try {
     const matches = await fetch(
-      `https://sea.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?${queryQueue}start=${start}&count=${count}&api_key=${API_KEY}`,
-      {
-        next: { revalidate: 900, tags: [cacheKey] },
-      }
+      `https://sea.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?${queryQueue}start=${start}&count=${count}&api_key=${API_KEY}`
     ).then((response) => response.json());
 
     const enrichedData = await Promise.all(
