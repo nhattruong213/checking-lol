@@ -148,7 +148,7 @@ export const TeamItemInfo = (props: TProp) => {
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: mdUp ? 'row' : 'column', gap: mdUp ? 3 : 0 }}>
+      <Box sx={{ display: 'flex', flexDirection: mdUp ? 'row' : 'column', gap: mdUp ? 3 : 1 }}>
         <Box display={'flex'} gap={seDown ? 1 : 2}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start', width: 60 }}>
             <Typography
