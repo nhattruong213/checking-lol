@@ -16,7 +16,7 @@ export const WinRate = ({ player }: { player: { wins: number; losses: number } }
         <Box
           sx={{
             flexGrow: winRate,
-            backgroundColor: '#4caf50',
+            backgroundColor: '#2d91d2',
             height: 20,
             position: 'relative',
             borderTopLeftRadius: 10,
