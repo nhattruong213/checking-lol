@@ -1,8 +1,7 @@
 'use client';
 
-import { alpha, Container, Grid, Typography } from '@mui/material';
+import { alpha, Button, Container, Grid, Typography } from '@mui/material';
 import { Box, Stack, styled } from '@mui/system';
-import { useCallback, useState } from 'react';
 
 import { MotionViewport } from '@/components/atoms/animate/motion-viewport';
 import { AvatarCustom } from '@/components/atoms/avatar';
@@ -22,7 +21,7 @@ import { RankPoint } from './components/RankPoint';
 import { TopChampions } from './components/TopChampions';
 import { useLogic } from './hooks/useLogic';
 import { useMatch } from './hooks/useMatch';
-import { TRankPoint } from './type';
+import { TMatch, TRankPoint } from './type';
 
 const StyledRoot = styled('div')(({ theme }) => ({
   ...bgGradient({
@@ -33,19 +32,11 @@ const StyledRoot = styled('div')(({ theme }) => ({
 }));
 
 export const Profile = ({ gameName }: { gameName: string }) => {
-  const [queueId, setQueueId] = useState<string | number>('all');
   const mdDown = useResponsive('down', 'md');
   const smd = useResponsive('between', 700, 'md');
 
   const { data, version, isLoading, rankPoints, isLoadingRankPoints } = useLogic(gameName);
-  const { matches, isLoadingMatches } = useMatch(data?.puuid, queueId);
-
-  const handleChangeQueue = useCallback(
-    (event: React.SyntheticEvent, newValue: string | number) => {
-      setQueueId(newValue);
-    },
-    [setQueueId]
-  );
+  const { matches, isLoadingMatches, queueId, handleChangeQueue, handleLoadMore } = useMatch(data?.puuid);
 
   return (
     <MainLayout>
@@ -175,13 +166,21 @@ export const Profile = ({ gameName }: { gameName: string }) => {
               </Grid>
               <Grid item xs={12} md={8}>
                 <Card sx={{ p: 1, borderRadius: 0, pt: 1 }}>
-                  {isLoadingMatches ? (
+                  {matches.length == 0 && isLoadingMatches ? (
                     <MatchSkeleton />
                   ) : (
-                    matches?.map((match: any, key: string) => {
+                    matches?.map((match: TMatch, key: number) => {
                       return <Match key={key} match={match} version={version} puuid={data?.puuid} />;
                     })
                   )}
+
+                  {matches.length > 0 && isLoadingMatches && <MatchSkeleton itemCount={5} />}
+
+                  <Box sx={{ display: 'flex', justifyContent: 'center', width: 1, mt: 2 }}>
+                    <Button onClick={handleLoadMore} sx={{ width: 200 }} variant="outlined">
+                      {'Tải thêm'}
+                    </Button>
+                  </Box>
                 </Card>
               </Grid>
             </Grid>

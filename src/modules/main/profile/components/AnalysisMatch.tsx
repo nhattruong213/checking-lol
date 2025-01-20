@@ -5,15 +5,27 @@ import { Doughnut } from 'react-chartjs-2';
 
 import { Card } from '@/components/atoms/card';
 import { Iconify } from '@/components/atoms/iconify';
+
+import { Participant, TMatch } from '../type';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const AnalysisMatch = ({ matches, puuid }: { matches: any; puuid: string }) => {
+interface IKDAStats {
+  kills: number;
+  deaths: number;
+  assists: number;
+}
+
+interface IRoleCounts {
+  [key: string]: number;
+}
+
+export const AnalysisMatch = ({ matches, puuid }: { matches: TMatch[]; puuid: string }) => {
   const totalMatches = matches.length;
   const theme = useTheme();
-  const wins = matches.filter((match: any) => {
+  const wins = matches.filter((match: TMatch) => {
     const { info } = match;
     const { participants } = info;
-    const summoner = participants?.find((summoner: any) => summoner.puuid === puuid);
+    const summoner = participants?.find((summoner: Participant) => summoner.puuid === puuid);
 
     return summoner?.win;
   }).length;
@@ -23,10 +35,10 @@ export const AnalysisMatch = ({ matches, puuid }: { matches: any; puuid: string 
   const winRate = ((wins / totalMatches) * 100).toFixed(2);
 
   const kdaStats = matches.reduce(
-    (acc: any, match: any) => {
+    (acc: IKDAStats, match: TMatch) => {
       const { info } = match;
       const { participants } = info;
-      const summoner = participants?.find((summoner: any) => summoner.puuid === puuid);
+      const summoner = participants?.find((summoner: Participant) => summoner.puuid === puuid);
       if (summoner) {
         acc.kills += summoner.kills;
         acc.deaths += summoner.deaths;
@@ -43,10 +55,10 @@ export const AnalysisMatch = ({ matches, puuid }: { matches: any; puuid: string 
   const avgAssists = (kdaStats.assists / totalMatches).toFixed(2);
   const kda = ((kdaStats.kills + kdaStats.assists) / kdaStats.deaths).toFixed(2);
 
-  const roleCounts = matches.reduce((acc: any, match: any) => {
+  const roleCounts = matches.reduce((acc: IRoleCounts, match: TMatch) => {
     const { info } = match;
     const { participants } = info;
-    const summoner = participants?.find((summoner: any) => summoner.puuid === puuid);
+    const summoner = participants?.find((summoner: Participant) => summoner.puuid === puuid);
     if (summoner) {
       acc[summoner.teamPosition] = (acc[summoner.teamPosition] || 0) + 1;
     }
