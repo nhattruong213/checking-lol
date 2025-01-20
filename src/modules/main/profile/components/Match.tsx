@@ -42,8 +42,8 @@ export const Match = ({ match, puuid, version }: { match: TMatch; puuid?: string
           p: 2,
           borderRadius: 1,
           mb: openDetail ? 0 : 1,
-          borderBottomRightRadius: openDetail ? 0 : 1,
-          borderBottomLeftRadius: openDetail ? 0 : 1,
+          borderBottomRightRadius: openDetail ? 0 : 1 + '!important',
+          borderBottomLeftRadius: openDetail ? 0 : 1 + '!important',
         }}
       >
         <Box mb={2} display="flex" alignItems="center" justifyContent="space-between">
