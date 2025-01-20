@@ -1,4 +1,4 @@
-import { Box, Chip, Stack, Typography, useTheme } from '@mui/material';
+import { alpha, Box, Chip, Stack, Typography } from '@mui/material';
 
 import { SvgColor } from '@/components/atoms/svgColor';
 
@@ -13,8 +13,7 @@ type TProp = {
 };
 export const TeamInfo = (props: TProp) => {
   const { players, team, name, maxDamage } = props;
-  const theme = useTheme();
-  const color = team.win ? 'rgb(160,115,255)' : theme.palette.error.main;
+  const color = team.win ? '#2d91d2' : alpha('rgb(188, 64, 79)', 1);
   const { totalKills, totalDeaths, totalAssists, totalGold } = players.reduce(
     (totals, player) => ({
       totalKills: totals.totalKills + player.kills,
@@ -37,7 +36,7 @@ export const TeamInfo = (props: TProp) => {
           sx={{
             fontWeight: 'bold',
             textTransform: 'uppercase',
-            backgroundColor: team.win ? 'rgb(160,115,255, 0.3)' : 'rgba(255, 0, 0, 0.2)',
+            backgroundColor: team.win ? 'rgba(83, 164, 240, 0.3)' : 'rgba(255, 0, 0, 0.2)',
             color: color,
             borderRadius: 1,
           }}

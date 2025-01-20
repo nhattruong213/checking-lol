@@ -1,4 +1,4 @@
-import { Box, Chip, Link as LinkMui, Stack, Typography, useTheme } from '@mui/material';
+import { alpha, Box, Chip, Link as LinkMui, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -20,7 +20,6 @@ export const TeamItemInfo = (props: TProp) => {
   const { version } = useAppSelector((state) => state.common);
   const { item0, item1, item2, item3, item4, item5, item6 } = player;
   const itemsArray = [item0, item1, item2, item3, item4, item5, item6];
-  const theme = useTheme();
   const widthDamage = (player.totalDamageDealtToChampions / maxDamage) * 100;
   const mdUp = useResponsive('up', 800);
   const smDown = useResponsive('down', 'sm');
@@ -118,7 +117,7 @@ export const TeamItemInfo = (props: TProp) => {
                 width: 36,
                 height: 25,
                 px: 0,
-                backgroundColor: player.rankPosition === 1 ? 'rgb(255 186 21/1)' : '#588de378',
+                backgroundColor: player.rankPosition === 1 ? 'rgb(255 186 21/1)' : 'rgba(73, 150, 223, 0.3)',
                 borderRadius: 1,
                 '.MuiChip-label': {
                   paddingLeft: 0,
@@ -187,7 +186,7 @@ export const TeamItemInfo = (props: TProp) => {
                   left: 0,
                   width: `${widthDamage}%`,
                   height: 1,
-                  backgroundColor: player.win ? '#2d91d2' : theme.palette.error.main,
+                  backgroundColor: player.win ? '#2d91d2' : alpha('rgb(188, 64, 79)', 1),
                   borderRadius: 1,
                 }}
               />

@@ -50,7 +50,7 @@ export const PostGame = (props: TProp) => {
       <Box pt={2}>
         <TeamInfo maxDamage={maxDamage} name={'Team 1'} team={teams[0]} players={teams[0].win ? playerWins : playerLoses} />
       </Box>
-      <Box px={5} py={1}>
+      <Box px={5}>
         <SvgColor sx={{ width: '100%', color: theme.palette.primary.main }} src="/assets/match/strack.svg" />
       </Box>
       <TeamInfo maxDamage={maxDamage} name={'Team 2'} team={teams[1]} players={teams[1].win ? playerWins : playerLoses} />
