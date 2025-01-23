@@ -29,8 +29,8 @@ export const useMatch = (puuid?: string) => {
   });
 
   const handleLoadMore = () => {
-    setStart(count);
-    setCount(5);
+    setStart((prev) => prev + 10);
+    setCount(10);
   };
 
   const handleChangeQueue = (event: React.SyntheticEvent, newValue: string | number) => {
