@@ -206,7 +206,7 @@ export const Match = ({ match, puuid, version }: { match: TMatch; puuid?: string
           </Box>
         )}
       </Card>
-      {openDetail && <MatchDetail matchInfo={info} />}
+      {openDetail && puuid && <MatchDetail puuid={puuid} matchInfo={info} />}
     </>
   );
 };

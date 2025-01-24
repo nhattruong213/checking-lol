@@ -1,7 +1,9 @@
 import { useQuery } from '@/hooks/useQuery';
 import { getRanksPoint } from '@/services/api/get-rank-points';
+import { getRunnes } from '@/services/api/get-runnes';
 import { getSummoner } from '@/services/api/get-summoner';
-import { useAppSelector } from '@/stores/hooks';
+import { useAppDispatch, useAppSelector } from '@/stores/hooks';
+import { runnesAction } from '@/stores/reducers/runnes';
 
 export const useLogic = (gameName: string) => {
   const [name, tagLine] = gameName.split('#').map((part) => part.trim());
@@ -27,6 +29,19 @@ export const useLogic = (gameName: string) => {
     options: {
       queryKey: [data?.id],
       enabled: !!data,
+    },
+  });
+
+  const dispatch = useAppDispatch();
+
+  useQuery({
+    apiConfig: getRunnes,
+    options: {
+      queryKey: [version],
+      staleTime: 24 * 60 * 60 * 1000,
+    },
+    onSuccess: ({ data }) => {
+      dispatch(runnesAction.setData(data || null));
     },
   });
 
