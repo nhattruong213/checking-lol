@@ -4,10 +4,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { authReducer } from './reducers/auth';
 import { commonReducer } from './reducers/common';
+import { runnesReducer } from './reducers/runnes';
 
 const rootReducer = combineReducers({
   user: authReducer,
   common: commonReducer,
+  runnes: runnesReducer,
 });
 
 const setupStore = () => {

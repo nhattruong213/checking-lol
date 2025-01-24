@@ -4,13 +4,15 @@ import { useState } from 'react';
 import { Card } from '@/components/atoms/card';
 
 import { Info } from '../type';
+import { Build } from './Build';
 import { PostGame } from './PostGame';
 
 type TProp = {
   matchInfo: Info;
+  puuid: string;
 };
 export const MatchDetail = (props: TProp) => {
-  const { matchInfo } = props;
+  const { matchInfo, puuid } = props;
   const [active, setActive] = useState('postGame');
   const handleSetActive = (tab: string) => {
     setActive(tab);
@@ -70,6 +72,7 @@ export const MatchDetail = (props: TProp) => {
         </Button>
       </Box>
       {active === 'postGame' && <PostGame matchInfo={matchInfo} />}
+      {active === 'build' && <Build matchInfo={matchInfo} puuid={puuid} />}
     </Card>
   );
 };
