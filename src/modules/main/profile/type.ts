@@ -379,3 +379,35 @@ interface Metadata {
   matchId: string;
   participants: string[];
 }
+
+export type Rune = {
+  id: number;
+  key: string;
+  icon: string;
+  name: string;
+  shortDesc: string;
+  longDesc: string;
+};
+
+export type RuneSlot = {
+  runes: Rune[];
+};
+
+export type Perk = {
+  id: number;
+  key: string;
+  icon: string;
+  name: string;
+  slots: RuneSlot[];
+};
+
+export type StatMod = {
+  id: number;
+  icon: string;
+  name: string;
+};
+
+export type Mods = {
+  group: 'defense' | 'flex' | 'offense';
+  items: StatMod[];
+};
