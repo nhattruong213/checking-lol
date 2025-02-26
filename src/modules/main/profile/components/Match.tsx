@@ -21,7 +21,7 @@ export const Match = ({ match, puuid, version }: { match: TMatch; puuid?: string
   const smUp = useResponsive('up', 'sm');
   const { value: openDetail, onToggle } = useBoolean(false);
 
-  const { info } = match;
+  const { info, metadata } = match;
   const { participants } = info;
   const summoner: Participant = participants.find((summoner: Participant) => summoner.puuid === puuid) as Participant;
   const { item0, item1, item2, item3, item4, item5, item6 } = summoner;
@@ -206,7 +206,7 @@ export const Match = ({ match, puuid, version }: { match: TMatch; puuid?: string
           </Box>
         )}
       </Card>
-      {openDetail && puuid && <MatchDetail puuid={puuid} matchInfo={info} />}
+      {openDetail && puuid && <MatchDetail matchId={metadata.matchId} puuid={puuid} matchInfo={info} />}
     </>
   );
 };
