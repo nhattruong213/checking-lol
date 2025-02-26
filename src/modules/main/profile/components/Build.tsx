@@ -2,17 +2,20 @@ import { Box, Stack } from '@mui/material';
 import Image from 'next/image';
 
 import { bgGradient } from '@/styles/theme/css';
+import { TRunnes, TSlot } from '@/types/runnes';
 
 import { StatMods } from '../constants';
 import { useBuild } from '../hooks/useBuild';
-import { Info, Perk, RuneSlot, StatPerks } from '../type';
+import { Info, StatPerks } from '../type';
+import { Timeline } from './Timeline';
 
 type TProps = {
   matchInfo: Info;
   puuid: string;
+  matchId: string;
 };
 
-const RuneDisplay = ({ runes, selectedStyle }: { runes: Perk[]; selectedStyle: number }) => (
+const RuneDisplay = ({ runes, selectedStyle }: { runes: TRunnes[]; selectedStyle: number }) => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1.5, mt: 1, mb: 2 }}>
     {runes?.map((rune) => {
       const isSelected = selectedStyle === rune.id;
@@ -40,7 +43,7 @@ const RuneDisplay = ({ runes, selectedStyle }: { runes: Perk[]; selectedStyle: n
   </Box>
 );
 
-const SlotDisplay = ({ slots, selectedPerks, isSubPrimary }: { slots: RuneSlot[]; selectedPerks: number[]; isSubPrimary: boolean }) => (
+const SlotDisplay = ({ slots, selectedPerks, isSubPrimary }: { slots: TSlot[]; selectedPerks: number[]; isSubPrimary: boolean }) => (
   <Box
     sx={{
       width: 1,
@@ -133,7 +136,7 @@ const Mods = ({ statPerks }: { statPerks: StatPerks }) => {
   );
 };
 
-export const Build = ({ matchInfo, puuid }: TProps) => {
+export const Build = ({ matchInfo, puuid, matchId }: TProps) => {
   const { participants } = matchInfo;
   const currentParticipant = participants.find((p) => p.puuid === puuid);
   const { perks } = currentParticipant || {};
@@ -155,14 +158,17 @@ export const Build = ({ matchInfo, puuid }: TProps) => {
           ].map((data, index) => (
             <Box width={278} key={index}>
               <Stack justifyContent="center">
-                {data.style && <RuneDisplay runes={runnes || []} selectedStyle={data.style} />}
-                <SlotDisplay slots={data.slots || []} isSubPrimary={data.isSubPrimary} selectedPerks={data.selections?.map((s) => s.perk) || []} />
+                {data.style && runnes && <RuneDisplay runes={runnes} selectedStyle={data.style} />}
+                {data.slots && (
+                  <SlotDisplay slots={data.slots} isSubPrimary={data.isSubPrimary} selectedPerks={data.selections?.map((s) => s.perk) || []} />
+                )}
                 {data.isSubPrimary && statPerks && <Mods statPerks={statPerks} />}
               </Stack>
             </Box>
           ))}
         </Box>
       </Box>
+      <Timeline matchId={matchId} puuid={puuid} />
     </Box>
   );
 };

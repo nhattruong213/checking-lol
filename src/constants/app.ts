@@ -13,7 +13,7 @@ export const PAGINATION_DEFAULT = {
   limit: PAGINATION_LIMIT.S,
   page: 1,
 };
-export const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? 'RGAPI-4c21336b-763b-4536-9905-607adc283fbb';
+export const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? 'RGAPI-ebaf8e3b-ddbd-48da-9a8b-362911454d73';
 export const HOST_API = process.env.NEXT_PUBLIC_HOST_API ?? '/';
 
 export const REAL_PATH = process.env.NEXT_PUBLIC_NOVA_RESERVE_URL;

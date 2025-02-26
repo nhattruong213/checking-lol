@@ -10,9 +10,10 @@ import { PostGame } from './PostGame';
 type TProp = {
   matchInfo: Info;
   puuid: string;
+  matchId: string;
 };
 export const MatchDetail = (props: TProp) => {
-  const { matchInfo, puuid } = props;
+  const { matchInfo, puuid, matchId } = props;
   const [active, setActive] = useState('postGame');
   const handleSetActive = (tab: string) => {
     setActive(tab);
@@ -72,7 +73,7 @@ export const MatchDetail = (props: TProp) => {
         </Button>
       </Box>
       {active === 'postGame' && <PostGame matchInfo={matchInfo} />}
-      {active === 'build' && <Build matchInfo={matchInfo} puuid={puuid} />}
+      {active === 'build' && <Build matchId={matchId} matchInfo={matchInfo} puuid={puuid} />}
     </Card>
   );
 };

@@ -411,3 +411,19 @@ export type Mods = {
   group: 'defense' | 'flex' | 'offense';
   items: StatMod[];
 };
+
+export type SkillEvent = {
+  skillSlot: number;
+  levelUpType: string;
+  timestamp: number;
+};
+
+export type ItemEvent = {
+  itemId: number;
+  timestamp: number;
+};
+
+export type TimelineData = {
+  skillOrder: SkillEvent[];
+  itemPurchases: ItemEvent[];
+};
